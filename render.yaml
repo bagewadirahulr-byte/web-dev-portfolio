@@ -2,6 +2,7 @@ services:
   - type: web
     name: snapurl
     env: python
+    plan: free
     buildCommand: pip install -r python-url-shortener/requirements.txt
     startCommand: gunicorn --chdir python-url-shortener app:app
     envVars:
