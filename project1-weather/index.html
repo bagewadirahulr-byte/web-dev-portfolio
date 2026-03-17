@@ -162,8 +162,8 @@
   </div>
 
   <script>
-    const API_KEY = 'bd5e378503941ddeb2130bab26b53e43'; // Free OpenWeatherMap demo key
-
+    // 🌍 NO API KEY NEEDED! Open-Meteo is 100% free forever.
+    
     function quickCity(city) {
       document.getElementById('cityInput').value = city;
       getWeather();
@@ -173,22 +173,19 @@
       if (e.key === 'Enter') getWeather();
     });
 
-    function getWeatherIcon(code) {
-      if (code >= 200 && code < 300) return '⛈';
-      if (code >= 300 && code < 400) return '🌦';
-      if (code >= 500 && code < 600) return '🌧';
-      if (code >= 600 && code < 700) return '❄️';
-      if (code >= 700 && code < 800) return '🌫';
-      if (code === 800) return '☀️';
-      if (code === 801) return '🌤';
-      if (code === 802) return '⛅';
-      return '☁️';
-    }
-
-    function formatDate(dt, tz) {
-      const d = new Date((dt + tz) * 1000);
-      return d.toUTCString().replace(' GMT', '');
-    }
+    // WMO Weather interpretation codes
+    window.getWeatherInfo = function(code) {
+      if (code === 0) return { i: '☀️', d: 'Clear sky' };
+      if (code === 1 || code === 2) return { i: '🌤', d: 'Partly cloudy' };
+      if (code === 3) return { i: '☁️', d: 'Overcast' };
+      if (code >= 40 && code < 50) return { i: '🌫', d: 'Foggy' };
+      if (code >= 51 && code < 60) return { i: '🌧', d: 'Drizzle' };
+      if (code >= 60 && code < 70) return { i: '🌧', d: 'Rain' };
+      if (code >= 70 && code < 80) return { i: '❄️', d: 'Snow' };
+      if (code >= 80 && code < 95) return { i: '🌧', d: 'Showers' };
+      if (code >= 95) return { i: '⛈', d: 'Thunderstorm' };
+      return { i: '☁️', d: 'Unknown' };
+    };
 
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -202,49 +199,87 @@
       document.getElementById('error').classList.remove('show');
 
       try {
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`);
-        const data = await res.json();
-        document.getElementById('loading').classList.remove('show');
-
-        if (data.cod !== 200) {
-          showError(`City "${city}" not found. Please try another city.`);
+        // Step 1: Geocoding (Convert City Name to Coordinates)
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+        const geoData = await geoRes.json();
+        
+        if (!geoData.results || geoData.results.length === 0) {
+          showError(`City "${city}" not found. Try Mumbai, London, or Tokyo.`);
+          document.getElementById('loading').classList.remove('show');
           return;
         }
 
-        // Fill main card
-        document.getElementById('cityName').textContent = `${data.name}, ${data.sys.country}`;
-        document.getElementById('cityDate').textContent = formatDate(data.dt, data.timezone);
-        document.getElementById('weatherDesc').textContent = data.weather[0].description;
-        document.getElementById('weatherIcon').textContent = getWeatherIcon(data.weather[0].id);
-        document.getElementById('temperature').textContent = `${Math.round(data.main.temp)}°C`;
-        document.getElementById('humidity').textContent = `${data.main.humidity}%`;
-        document.getElementById('wind').textContent = `${data.wind.speed} m/s`;
-        document.getElementById('visibility').textContent = `${(data.visibility / 1000).toFixed(1)} km`;
-        document.getElementById('feelsLike').textContent = `${Math.round(data.main.feels_like)}°C`;
-        document.getElementById('pressure').textContent = `${data.main.pressure} hPa`;
-        document.getElementById('clouds').textContent = `${data.clouds.all}%`;
+        const loc = geoData.results[0];
+        const lat = loc.latitude;
+        const lon = loc.longitude;
+        const country = loc.country_code || '??';
+        const cityName = loc.name;
+
+        // Step 2: Fetch actual weather
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code&timezone=auto`;
+        const weatherRes = await fetch(weatherUrl);
+        const data = await weatherRes.json();
+        
+        document.getElementById('loading').classList.remove('show');
+
+        // Render Current Weather
+        const nowIdx = new Date().getHours();
+        const info = window.getWeatherInfo(data.current.weather_code);
+        
+        document.getElementById('cityName').textContent = `${cityName}, ${country}`;
+        document.getElementById('cityDate').textContent = new Date().toUTCString().replace(' GMT','');
+        document.getElementById('weatherDesc').textContent = info.d;
+        document.getElementById('weatherIcon').textContent = info.i;
+        
+        document.getElementById('temperature').textContent = `${Math.round(data.current.temperature_2m)}°C`;
+        document.getElementById('humidity').textContent = `${data.current.relative_humidity_2m}%`;
+        document.getElementById('wind').textContent = `${data.current.wind_speed_10m} km/h`;
+        document.getElementById('visibility').textContent = `${data.current.precipitation} mm`;
+        document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain'; // changed label slightly
+        document.getElementById('feelsLike').textContent = `${Math.round(data.current.apparent_temperature)}°C`;
+        document.getElementById('pressure').textContent = `${data.current.surface_pressure} hPa`;
+        document.getElementById('clouds').textContent = `${data.current.cloud_cover}%`;
+        
         document.getElementById('mainCard').classList.add('show');
 
-        // Fetch forecast
-        const fRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&cnt=5`);
-        const fData = await fRes.json();
+        // Render Forecast (Next 5 intervals)
         const grid = document.getElementById('forecastGrid');
-        fData.list.forEach(item => {
-          const d = new Date(item.dt * 1000);
+        grid.innerHTML = '';
+        
+        let startIdx = 0;
+        // find future time index
+        for(let i=0; i<data.hourly.time.length; i++){
+            if(new Date(data.hourly.time[i]).getTime() > Date.now()){
+                startIdx = i;
+                break;
+            }
+        }
+
+        // Get 5 forecasts, starting from next few hours, spaced by 3 hours
+        for (let j=0; j<5; j++) {
+          const hIdx = startIdx + (j*3);
+          if(hIdx >= data.hourly.time.length) break;
+          
+          const dt = new Date(data.hourly.time[hIdx]);
+          const code = data.hourly.weather_code[hIdx];
+          const temp = data.hourly.temperature_2m[hIdx];
+          const inf = window.getWeatherInfo(code);
+          
           const card = document.createElement('div');
           card.className = 'forecast-card show';
           card.innerHTML = `
-            <div class="forecast-day">${days[d.getDay()]} ${d.getHours()}:00</div>
-            <div class="forecast-icon">${getWeatherIcon(item.weather[0].id)}</div>
-            <div class="forecast-temp">${Math.round(item.main.temp)}°C</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${item.weather[0].description}</div>
+            <div class="forecast-day">${days[dt.getDay()]} ${dt.getHours()}:00</div>
+            <div class="forecast-icon">${inf.i}</div>
+            <div class="forecast-temp">${Math.round(temp)}°C</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${inf.d}</div>
           `;
           grid.appendChild(card);
-        });
+        }
 
       } catch (err) {
         document.getElementById('loading').classList.remove('show');
-        showError('Network error. Check your connection and try again.');
+        showError('Network error. Check your connection.');
+        console.error(err);
       }
     }
 
