@@ -43,95 +43,108 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:var(--text);min-hei
 .contact-item{display:flex;align-items:center;gap:8px;margin-bottom:10px;justify-content:flex-end;color:rgba(255,255,255,0.8);font-size:0.88rem}
 .contact-item a{color:var(--accent2);text-decoration:none;font-weight:500}
 .contact-item a:hover{text-decoration:underline}
-.ci{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
+.ci{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}  /* BODY */
+  .resume-body{display:grid;grid-template-columns:1fr 2fr;min-height:auto} /* Allow height to grow */
 
-/* BODY */
-.resume-body{display:grid;grid-template-columns:1fr 2fr;min-height:700px}
+  /* PAGE BREAKS */
+  .page-break {
+    display: none;
+  }
 
-/* LEFT SIDEBAR */
-.sidebar{background:#f8fafc;border-right:1px solid var(--border);padding:36px 28px}
-.section{margin-bottom:32px}
-.section-title{font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--accent);position:relative}
+  @media print {
+    .page-break {
+      display: block;
+      page-break-before: always;
+    }
+  }
 
-/* SKILLS */
-.skill-group{margin-bottom:20px}
-.skill-group-name{font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.skill-item{margin-bottom:10px}
-.skill-name{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:4px}
-.skill-name span:last-child{font-weight:600;color:var(--primary)}
-.skill-bar{height:5px;background:var(--border);border-radius:50px;overflow:hidden}
-.skill-fill{height:100%;border-radius:50px}
-.fill-fire{background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.fill-water{background:linear-gradient(90deg,#0077b6,#00d4ff)}
-.fill-thunder{background:linear-gradient(90deg,#f59e0b,#fde68a)}
-.fill-python{background:linear-gradient(90deg,#22c55e,#86efac)}
-.fill-wind{background:linear-gradient(90deg,#8b5cf6,#c4b5fd)}
+  /* LEFT SIDEBAR */
+  .sidebar{background:#f8fafc;border-right:1px solid var(--border);padding:36px 28px}
+  .section{margin-bottom:32px}
+  .section-title{font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--accent);position:relative}
 
-/* TOOLS */
-.tools-list{display:flex;flex-wrap:wrap;gap:7px}
-.tool-tag{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:0.75rem;font-weight:600;color:var(--text)}
+  /* SKILLS */
+  .skill-group{margin-bottom:24px}
+  .skill-group-name{font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .skill-item{margin-bottom:12px}
+  .skill-name{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:4px}
+  .skill-name span:last-child{font-weight:600;color:var(--primary)}
+  .skill-bar{height:5px;background:var(--border);border-radius:50px;overflow:hidden}
+  .skill-fill{height:100%;border-radius:50px}
+  .fill-fire{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .fill-water{background:linear-gradient(90deg,#0077b6,#00d4ff)}
+  .fill-thunder{background:linear-gradient(90deg,#f59e0b,#fde68a)}
+  .fill-python{background:linear-gradient(90deg,#22c55e,#86efac)}
+  .fill-wind{background:linear-gradient(90deg,#8b5cf6,#c4b5fd)}
 
-/* LANGUAGES */
-.lang-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.85rem}
-.lang-dots{display:flex;gap:3px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
-.dot.filled{background:var(--accent)}
+  /* TOOLS */
+  .tools-list{display:flex;flex-wrap:wrap;gap:7px}
+  .tool-tag{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:0.75rem;font-weight:600;color:var(--text)}
 
-/* LINKS */
-.link-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.82rem}
-.link-item a{color:var(--accent);text-decoration:none;font-weight:500;word-break:break-all}
-.link-item a:hover{text-decoration:underline}
+  /* LANGUAGES */
+  .lang-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.85rem}
+  .lang-dots{display:flex;gap:3px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+  .dot.filled{background:var(--accent)}
 
-/* MAIN CONTENT */
-.main-content{padding:36px 40px}
+  /* LINKS */
+  .link-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.82rem}
+  .link-item a{color:var(--accent);text-decoration:none;font-weight:500;word-break:break-all}
+  .link-item a:hover{text-decoration:underline}
 
-/* SUMMARY */
-.summary-box{background:linear-gradient(135deg,rgba(196,30,58,0.04),rgba(255,107,53,0.04));border:1px solid rgba(196,30,58,0.15);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:18px 20px;margin-bottom:28px}
-.summary-box p{font-size:0.92rem;line-height:1.8;color:var(--text)}
-.summary-box strong{color:var(--accent)}
+  /* MAIN CONTENT */
+  .main-content{padding:36px 40px}
 
-/* EXPERIENCE / CONTENT SECTION */
-.main-section{margin-bottom:32px}
-.main-section-title{font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:18px;padding-bottom:8px;border-bottom:2px solid rgba(196,30,58,0.2);display:flex;align-items:center;gap:8px}
+  /* SUMMARY */
+  .summary-box{background:linear-gradient(135deg,rgba(196,30,58,0.04),rgba(255,107,53,0.04));border:1px solid rgba(196,30,58,0.15);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:18px 20px;margin-bottom:28px}
+  .summary-box p{font-size:0.92rem;line-height:1.8;color:var(--text)}
+  .summary-box strong{color:var(--accent)}
 
-/* PROJECT CARD */
-.project-item{background:var(--light);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;position:relative;transition:box-shadow 0.2s}
-.project-item:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08)}
-.project-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap}
-.project-name{font-size:1rem;font-weight:700;color:var(--primary)}
-.project-type{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:50px;white-space:nowrap}
-.type-web{background:rgba(196,30,58,0.1);color:var(--accent)}
-.type-python{background:rgba(34,197,94,0.12);color:#15803d}
-.project-desc{font-size:0.84rem;color:var(--muted);line-height:1.6;margin-bottom:10px}
-.project-stack{display:flex;flex-wrap:wrap;gap:6px}
-.stack-pill{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:3px 10px;font-size:0.72rem;font-weight:600;color:var(--text)}
-.stack-pill.highlight{background:linear-gradient(135deg,rgba(196,30,58,0.08),rgba(255,107,53,0.08));border-color:rgba(196,30,58,0.25);color:var(--accent)}
+  /* EXPERIENCE / CONTENT SECTION */
+  .main-section{margin-bottom:36px}
+  .main-section-title{font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:18px;padding-bottom:8px;border-bottom:2px solid rgba(196,30,58,0.2);display:flex;align-items:center;gap:8px}
 
-/* EDUCATION */
-.edu-item{background:var(--light);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
-.edu-degree{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:4px}
-.edu-school{font-size:0.88rem;font-weight:600;color:var(--accent);margin-bottom:4px}
-.edu-year{font-size:0.82rem;color:var(--muted)}
-.edu-detail{font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
+  /* PROJECT CARD */
+  .project-item{background:var(--light);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:18px;position:relative;transition:box-shadow 0.2s}
+  .project-item:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+  .project-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+  .project-name{font-size:1.05rem;font-weight:700;color:var(--primary)}
+  .project-type{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:50px;white-space:nowrap}
+  .type-web{background:rgba(196,30,58,0.1);color:var(--accent)}
+  .type-python{background:rgba(34,197,94,0.12);color:#15803d}
+  .project-desc{font-size:0.88rem;color:var(--muted);line-height:1.7;margin-bottom:12px}
+  .project-highlights{margin-left:20px;margin-bottom:14px}
+  .project-highlights li{font-size:0.84rem;color:var(--text);margin-bottom:6px;line-height:1.5}
+  .project-stack{display:flex;flex-wrap:wrap;gap:6px}
+  .stack-pill{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:3px 10px;font-size:0.72rem;font-weight:600;color:var(--text)}
+  .stack-pill.highlight{background:linear-gradient(135deg,rgba(196,30,58,0.08),rgba(255,107,53,0.08));border-color:rgba(196,30,58,0.25);color:var(--accent)}
 
-/* ACHIEVEMENTS */
-.achieve-item{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
-.achieve-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
-.achieve-text{font-size:0.85rem;color:var(--muted);line-height:1.6}
-.achieve-text strong{color:var(--primary)}
+  /* EDUCATION */
+  .edu-item{background:var(--light);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .edu-degree{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:4px}
+  .edu-school{font-size:0.88rem;font-weight:600;color:var(--accent);margin-bottom:4px}
+  .edu-year{font-size:0.82rem;color:var(--muted)}
+  .edu-detail{font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
 
-/* FOOTER BAR */
-.resume-footer{background:linear-gradient(135deg,var(--primary),#16213e);padding:16px 50px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.resume-footer p{color:rgba(255,255,255,0.5);font-size:0.78rem}
-.footer-brand{color:var(--accent2);font-weight:700}
+  /* ACHIEVEMENTS / SOFT SKILLS */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .achieve-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+  .achieve-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
+  .achieve-text{font-size:0.85rem;color:var(--muted);line-height:1.6}
+  .achieve-text strong{color:var(--primary)}
 
-/* PRINT */
-@media print {
-  body{background:#fff;padding:0}
-  .print-bar{display:none}
-  .resume{border-radius:0;box-shadow:none;max-width:100%}
-  .project-item:hover{box-shadow:none}
-}
+  /* FOOTER BAR */
+  .resume-footer{background:linear-gradient(135deg,var(--primary),#16213e);padding:16px 50px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .resume-footer p{color:rgba(255,255,255,0.5);font-size:0.78rem}
+  .footer-brand{color:var(--accent2);font-weight:700}
+
+  /* PRINT */
+  @media print {
+    body{background:#fff;padding:0}
+    .print-bar{display:none}
+    .resume{border-radius:0;box-shadow:none;max-width:100%}
+    .project-item:hover{box-shadow:none}
+  }
 </style>
 </head>
 <body>
@@ -142,7 +155,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:var(--text);min-hei
   <button class="print-btn" onclick="window.print()">🖨️ Download PDF</button>
 </div>
 
-<!-- RESUME -->
+<!-- RESUME PAGE 1 -->
 <div class="resume">
 
   <!-- HEADER -->
@@ -175,10 +188,10 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:var(--text);min-hei
     </div>
   </div>
 
-  <!-- BODY -->
+  <!-- BODY P1 -->
   <div class="resume-body">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR P1 -->
     <div class="sidebar">
 
       <!-- TECHNICAL SKILLS -->
@@ -192,16 +205,12 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:var(--text);min-hei
             <div class="skill-bar"><div class="skill-fill fill-fire" style="width:85%"></div></div>
           </div>
           <div class="skill-item">
-            <div class="skill-name"><span>CSS3</span><span>82%</span></div>
+            <div class="skill-name"><span>CSS3 / Flexbox / Grid</span><span>82%</span></div>
             <div class="skill-bar"><div class="skill-fill fill-water" style="width:82%"></div></div>
           </div>
           <div class="skill-item">
             <div class="skill-name"><span>Responsive Design</span><span>78%</span></div>
             <div class="skill-bar"><div class="skill-fill fill-water" style="width:78%"></div></div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name"><span>CSS Animations</span><span>70%</span></div>
-            <div class="skill-bar"><div class="skill-fill fill-water" style="width:70%"></div></div>
           </div>
         </div>
 
@@ -224,232 +233,235 @@ body{font-family:'Inter',sans-serif;background:#f0f2f5;color:var(--text);min-hei
         <div class="skill-group">
           <div class="skill-group-name">🐍 Python</div>
           <div class="skill-item">
-            <div class="skill-name"><span>Python 3</span><span>80%</span></div>
+            <div class="skill-name"><span>Python 3 Programming</span><span>80%</span></div>
             <div class="skill-bar"><div class="skill-fill fill-python" style="width:80%"></div></div>
           </div>
           <div class="skill-item">
             <div class="skill-name"><span>Flask Framework</span><span>65%</span></div>
             <div class="skill-bar"><div class="skill-fill fill-python" style="width:65%"></div></div>
           </div>
-          <div class="skill-item">
-            <div class="skill-name"><span>File I/O &amp; CSV</span><span>75%</span></div>
-            <div class="skill-bar"><div class="skill-fill fill-python" style="width:75%"></div></div>
-          </div>
         </div>
       </div>
 
-      <!-- TOOLS -->
-      <div class="section">
-        <div class="section-title">Tools &amp; Technologies</div>
-        <div class="tools-list">
-          <span class="tool-tag">Git</span>
-          <span class="tool-tag">GitHub</span>
-          <span class="tool-tag">VS Code</span>
-          <span class="tool-tag">PyCharm</span>
-          <span class="tool-tag">SQLite</span>
-          <span class="tool-tag">LocalStorage</span>
-          <span class="tool-tag">GitHub Pages</span>
-          <span class="tool-tag">OpenWeather API</span>
-          <span class="tool-tag">QR Code</span>
-          <span class="tool-tag">Flexbox</span>
-          <span class="tool-tag">CSS Grid</span>
+      <!-- MAIN CONTENT P1 -->
+      <div class="main-content">
+
+        <!-- SUMMARY -->
+        <div class="summary-box">
+          <p>Creative and highly motivated <strong>Frontend Web Developer &amp; Python enthusiast</strong> with a passion for building professional digital experiences. Proven ability to take projects from <strong>concept to deployment</strong>. Strong foundation in <strong>HTML5, CSS3, JavaScript</strong>, and <strong>Python</strong>. Dedicated to writing clean, maintainable code and solving complex problems with efficient solutions.</p>
         </div>
+
+        <!-- PROJECTS P1 -->
+        <div class="main-section">
+          <div class="main-section-title">🚀 Core Web Projects</div>
+
+          <div class="project-item">
+            <div class="project-header">
+              <div class="project-name">🌤 WeatherVerse – Dynamic Dashboard</div>
+              <div class="project-type type-web">Web Dev</div>
+            </div>
+            <div class="project-desc">Real-time weather application fetching global data via OpenWeatherMap API with a premium animated interface.</div>
+            <ul class="project-highlights">
+              <li>Integrated <strong>OpenWeatherMap API</strong> for live data fetching and error handling.</li>
+              <li>Calculated and displayed <strong>5-hour forecasts</strong>, humidity, wind pressure, and visibility.</li>
+              <li>Implemented smooth CSS transitions and dynamic background updates based on weather conditions.</li>
+            </ul>
+            <div class="project-stack">
+              <span class="stack-pill highlight">HTML5</span>
+              <span class="stack-pill highlight">CSS3 (Flex/Grid)</span>
+              <span class="stack-pill highlight">JS (ES6+)</span>
+              <span class="stack-pill">API Integration</span>
+            </div>
+          </div>
+
+          <div class="project-item">
+            <div class="project-header">
+              <div class="project-name">⚡ TaskFlow – Kanban Productivity App</div>
+              <div class="project-type type-web">Web Dev</div>
+            </div>
+            <div class="project-desc">A full-featured project management tool with drag-and-drop functionality and local data persistence.</div>
+            <ul class="project-highlights">
+              <li>Developed a <strong>drag-and-drop</strong> interface using the Native JavaScript Drag API.</li>
+              <li>Engineered <strong>LocalStorage</strong> integration to persist data across browser sessions.</li>
+              <li>Built complex CRUD operations for task management (Create, Read, Update, Delete).</li>
+            </ul>
+            <div class="project-stack">
+              <span class="stack-pill highlight">JS Drag API</span>
+              <span class="stack-pill highlight">LocalStorage</span>
+              <span class="stack-pill highlight">Dynamic DOM</span>
+              <span class="stack-pill">CRUD Logic</span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
-
-      <!-- LEARNING -->
-      <div class="section">
-        <div class="section-title">Currently Learning</div>
-        <div class="tools-list">
-          <span class="tool-tag">⚛️ React.js</span>
-          <span class="tool-tag">🟢 Node.js</span>
-          <span class="tool-tag">🗄️ Databases</span>
-          <span class="tool-tag">📱 Web3</span>
-        </div>
-      </div>
-
-      <!-- LANGUAGES -->
-      <div class="section">
-        <div class="section-title">Languages</div>
-        <div class="lang-item">
-          <span style="font-size:0.85rem">English</span>
-          <div class="lang-dots">
-            <div class="dot filled"></div><div class="dot filled"></div>
-            <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div>
-          </div>
-        </div>
-        <div class="lang-item">
-          <span style="font-size:0.85rem">Hindi</span>
-          <div class="lang-dots">
-            <div class="dot filled"></div><div class="dot filled"></div>
-            <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
-          </div>
-        </div>
-        <div class="lang-item">
-          <span style="font-size:0.85rem">Kannada</span>
-          <div class="lang-dots">
-            <div class="dot filled"></div><div class="dot filled"></div>
-            <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- LINKS -->
-      <div class="section">
-        <div class="section-title">Links</div>
-        <div class="link-item">
-          <span>🐙</span>
-          <a href="https://github.com/bagewadirahulr-byte" target="_blank">github.com/bagewadirahulr-byte</a>
-        </div>
-        <div class="link-item">
-          <span>🌐</span>
-          <a href="https://bagewadirahulr-byte.github.io/web-dev-portfolio/portfolio/" target="_blank">Live Portfolio</a>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-
-      <!-- SUMMARY -->
-      <div class="summary-box">
-        <p>Passionate and creative <strong>Frontend Web Developer & Python Developer</strong> from India with hands-on experience building modern, responsive web applications and Python backend projects. Proficient in <strong>HTML5, CSS3, JavaScript, and Python (Flask)</strong>. Strong problem-solver who loves turning ideas into clean, functional, and visually stunning applications. Actively seeking <strong>internships or junior developer roles</strong> to grow and contribute to real-world projects.</p>
-      </div>
-
-      <!-- PROJECTS -->
-      <div class="main-section">
-        <div class="main-section-title">🚀 Web Development Projects</div>
-
-        <div class="project-item">
-          <div class="project-header">
-            <div class="project-name">🌤 WeatherVerse – Live Weather Dashboard</div>
-            <div class="project-type type-web">Web Dev</div>
-          </div>
-          <div class="project-desc">Built a real-time weather dashboard that fetches live data from OpenWeatherMap API. Features animated UI, city search, 5-hour forecast cards, humidity, wind speed, pressure and visibility stats. Deployed live on GitHub Pages.</div>
-          <div class="project-stack">
-            <span class="stack-pill highlight">HTML5</span>
-            <span class="stack-pill highlight">CSS3</span>
-            <span class="stack-pill highlight">JavaScript</span>
-            <span class="stack-pill">OpenWeather API</span>
-            <span class="stack-pill">Fetch API</span>
-            <span class="stack-pill">Responsive Design</span>
-          </div>
-        </div>
-
-        <div class="project-item">
-          <div class="project-header">
-            <div class="project-name">⚡ TaskFlow – Kanban Board App</div>
-            <div class="project-type type-web">Web Dev</div>
-          </div>
-          <div class="project-desc">Developed a full-featured drag-and-drop Kanban board with To Do, In Progress, and Done columns. Includes task priorities, tags, add/delete functionality, and data persistence using LocalStorage.</div>
-          <div class="project-stack">
-            <span class="stack-pill highlight">HTML5</span>
-            <span class="stack-pill highlight">CSS3</span>
-            <span class="stack-pill highlight">JavaScript</span>
-            <span class="stack-pill">Drag & Drop API</span>
-            <span class="stack-pill">LocalStorage</span>
-            <span class="stack-pill">CRUD Operations</span>
-          </div>
-        </div>
-
-        <div class="project-item">
-          <div class="project-header">
-            <div class="project-name">🧠 QuizMaster – Web Dev Quiz Game</div>
-            <div class="project-type type-web">Web Dev</div>
-          </div>
-          <div class="project-desc">Created an interactive timed quiz game with 10 web development questions, 20-second countdown timer per question, real-time score tracking, visual feedback, and a detailed results screen.</div>
-          <div class="project-stack">
-            <span class="stack-pill highlight">HTML5</span>
-            <span class="stack-pill highlight">CSS3</span>
-            <span class="stack-pill highlight">JavaScript</span>
-            <span class="stack-pill">Game Logic</span>
-            <span class="stack-pill">Timer API</span>
-            <span class="stack-pill">DOM Events</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- PYTHON PROJECTS -->
-      <div class="main-section">
-        <div class="main-section-title">🐍 Python Projects</div>
-
-        <div class="project-item">
-          <div class="project-header">
-            <div class="project-name">🔗 URL Shortener – Flask Web App</div>
-            <div class="project-type type-python">Python</div>
-          </div>
-          <div class="project-desc">Production-quality URL shortener with Flask backend, SQLite database, click analytics, custom short codes, QR code generation, copy-to-clipboard feature, and a modern dark-themed UI.</div>
-          <div class="project-stack">
-            <span class="stack-pill highlight">Python</span>
-            <span class="stack-pill highlight">Flask</span>
-            <span class="stack-pill">SQLite</span>
-            <span class="stack-pill">QR Code</span>
-            <span class="stack-pill">REST API</span>
-          </div>
-        </div>
-
-        <div class="project-item">
-          <div class="project-header">
-            <div class="project-name">💰 Personal Expense Tracker – CLI App</div>
-            <div class="project-type type-python">Python</div>
-          </div>
-          <div class="project-desc">Full-featured command-line expense tracker with add, view, summarize, and delete expense features. Includes CSV export functionality. Built with zero external dependencies — pure Python standard library.</div>
-          <div class="project-stack">
-            <span class="stack-pill highlight">Python</span>
-            <span class="stack-pill">CSV Module</span>
-            <span class="stack-pill">File I/O</span>
-            <span class="stack-pill">CLI</span>
-            <span class="stack-pill">OOP</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- EDUCATION -->
-      <div class="main-section">
-        <div class="main-section-title">🎓 Education</div>
-        <div class="edu-item">
-          <div class="edu-degree">Bachelor of Computer Applications / Computer Science</div>
-          <div class="edu-school">📍 Your College / University Name — India</div>
-          <div class="edu-year">📅 Year: [Add Your Year Here]</div>
-          <div class="edu-detail">Pursuing degree with focus on programming, web technologies, and software development fundamentals.</div>
-        </div>
-      </div>
-
-      <!-- ACHIEVEMENTS -->
-      <div class="main-section">
-        <div class="main-section-title">🏆 Highlights &amp; Strengths</div>
-        <div class="achieve-item">
-          <div class="achieve-icon">🚀</div>
-          <div class="achieve-text"><strong>6 Real Projects Built</strong> — 3 web development + 3 Python projects deployed on GitHub with live demos</div>
-        </div>
-        <div class="achieve-item">
-          <div class="achieve-icon">🌐</div>
-          <div class="achieve-text"><strong>Live Portfolio Deployed</strong> — Personal portfolio hosted on GitHub Pages with AI voice assistant feature</div>
-        </div>
-        <div class="achieve-item">
-          <div class="achieve-icon">⚡</div>
-          <div class="achieve-text"><strong>Fast Learner</strong> — Mastered HTML, CSS, JavaScript, and Python simultaneously with practical project experience</div>
-        </div>
-        <div class="achieve-item">
-          <div class="achieve-icon">🎨</div>
-          <div class="achieve-text"><strong>Strong UI/UX Instinct</strong> — Built visually stunning, responsive, animated interfaces without any UI framework</div>
-        </div>
-        <div class="achieve-item">
-          <div class="achieve-icon">🔥</div>
-          <div class="achieve-text"><strong>Full Stack Exposure</strong> — Frontend web apps (JS) + Backend APIs (Python/Flask) + Database (SQLite)</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <div class="resume-footer">
-    <p>📧 bagewadirahulr@gmail.com &nbsp;|&nbsp; 🐙 github.com/bagewadirahulr-byte</p>
-    <p class="footer-brand">Rahul Bagewadi · Web Developer &amp; Python Developer</p>
-  </div>
+  <div class="page-break"></div>
 
-</div>
+  <!-- RESUME PAGE 2 -->
+  <div class="resume" style="margin-top:20px">
+    <div class="resume-body">
+      
+      <!-- SIDEBAR P2 -->
+      <div class="sidebar">
+        
+        <!-- TOOLS -->
+        <div class="section">
+          <div class="section-title">Tools</div>
+          <div class="tools-list">
+            <span class="tool-tag">Git & GitHub</span>
+            <span class="tool-tag">VS Code</span>
+            <span class="tool-tag">SQLite</span>
+            <span class="tool-tag">LocalStorage</span>
+            <span class="tool-tag">REST APIs</span>
+          </div>
+        </div>
+
+        <!-- METHODOLOGIES -->
+        <div class="section">
+          <div class="section-title">Methodologies</div>
+          <div class="tools-list">
+            <span class="tool-tag">OOP (Python)</span>
+            <span class="tool-tag">Semantic HTML</span>
+            <span class="tool-tag">Agile Thinking</span>
+            <span class="tool-tag">UI/UX Basics</span>
+            <span class="tool-tag">Version Control</span>
+          </div>
+        </div>
+
+        <!-- SOFT SKILLS -->
+        <div class="section">
+          <div class="section-title">Soft Skills</div>
+          <div class="tools-list">
+            <span class="tool-tag">Analytical Thinking</span>
+            <span class="tool-tag">Creative Writing</span>
+            <span class="tool-tag">Time Management</span>
+            <span class="tool-tag">Self-Learning</span>
+            <span class="tool-tag">Problem Solving</span>
+          </div>
+        </div>
+
+        <!-- INTERESTS -->
+        <div class="section">
+          <div class="section-title">Interests &amp; Hobbies</div>
+          <div class="achieve-text" style="font-size: 0.82rem; line-height: 1.8;">
+            ⚔️ Anime (Demon Slayer Fan)<br>
+            💻 Coding Mini-Games<br>
+            📚 Tech Blog Reading<br>
+            🏏 Sports Enthusiast
+          </div>
+        </div>
+
+        <!-- LANGUAGES -->
+        <div class="section">
+          <div class="section-title">Languages</div>
+          <div class="lang-item"><span>English</span><div class="lang-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div></div>
+          <div class="lang-item"><span>Hindi</span><div class="lang-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div></div></div>
+          <div class="lang-item"><span>Kannada</span><div class="lang-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div></div></div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT P2 -->
+      <div class="main-content">
+        
+        <!-- WEB PROJECTS CONTINUED -->
+        <div class="main-section">
+          <div class="main-section-title">🚀 More Web Projects</div>
+          <div class="project-item">
+            <div class="project-header">
+              <div class="project-name">🧠 QuizMaster – Gamified Web Dev Quiz</div>
+              <div class="project-type type-web">Web Dev</div>
+            </div>
+            <div class="project-desc">A timed, interactive quiz engine designed to test fundamental web knowledge with detailed score breakdown.</div>
+            <ul class="project-highlights">
+              <li>Created a robust <strong>countdown timer system</strong> with visual urgency states.</li>
+              <li>Implemented a multi-screen game architecture (Start → Play → Result).</li>
+              <li>Built a score calculation and result classification algorithm based on performance.</li>
+            </ul>
+            <div class="project-stack">
+              <span class="stack-pill highlight">Game Logic</span>
+              <span class="stack-pill highlight">Timer API</span>
+              <span class="stack-pill">CSS Keyframes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PYTHON PROJECTS -->
+        <div class="main-section">
+          <div class="main-section-title">🐍 Python Backend Projects</div>
+
+          <div class="project-item">
+            <div class="project-header">
+              <div class="project-name">🔗 SnapURL – Fullstack URL Shortener</div>
+              <div class="project-type type-python">Python</div>
+            </div>
+            <div class="project-desc">Production-ready dashboard for shortening and tracking URLs with click analytics and QR generation.</div>
+            <ul class="project-highlights">
+              <li>Architected a <strong>Flask API</strong> for handling shortening, redirection, and deletion requests.</li>
+              <li>Designed a <strong>SQLite</strong> schema to store URL mappings and click metadata.</li>
+              <li>Integrated <strong>QR Code generation</strong> and Clipboard API for user convenience.</li>
+            </ul>
+            <div class="project-stack">
+              <span class="stack-pill highlight">Python (Flask)</span>
+              <span class="stack-pill highlight">SQLite3</span>
+              <span class="stack-pill">RESTful API</span>
+              <span class="stack-pill">Jinja2</span>
+            </div>
+          </div>
+
+          <div class="project-item">
+            <div class="project-header">
+              <div class="project-name">💰 FinanceFlow – Expense Tracker CLI</div>
+              <div class="project-type type-python">Python</div>
+            </div>
+            <div class="project-desc">A command-line tool for managing personal finances with powerful reporting features.</div>
+            <ul class="project-highlights">
+              <li>Implemented <strong>CSV/JSON data persistence</strong> for long-term storage of expense records.</li>
+              <li>Built a category-based <strong>reporting engine</strong> with visual ASCII bar charts.</li>
+              <li>Utilized <strong>Object Oriented Programming (OOP)</strong> concepts for scalable code structure.</li>
+            </ul>
+            <div class="project-stack">
+              <span class="stack-pill highlight">Python OOP</span>
+              <span class="stack-pill highlight">File I/O</span>
+              <span class="stack-pill">CLI Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="main-section">
+          <div class="main-section-title">🎓 Education &amp; Certifications</div>
+          <div class="edu-item">
+            <div class="edu-degree">Bachelor of Computer Applications (BCA)</div>
+            <div class="edu-school">📍 [Your Institution Name], India</div>
+            <div class="edu-year">📅 [2022 – 2025 (Expected)]</div>
+            <div class="edu-detail">Focus on Software Engineering, Data Structures, and Web Technologies. Consistent academic performer in core programming subjects.</div>
+          </div>
+          
+          <div class="info-grid">
+            <div class="achieve-item">
+              <div class="achieve-icon">📜</div>
+              <div class="achieve-text"><strong>Web Dev Bootcamp</strong><br>Udemy Authorized</div>
+            </div>
+            <div class="achieve-item">
+              <div class="achieve-icon">📜</div>
+              <div class="achieve-text"><strong>Advanced Python</strong><br>Coursera Verified</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="resume-footer" style="border-radius: 0 0 20px 20px">
+      <p>© 2025 Rahul Bagewadi. All rights reserved.</p>
+      <p class="footer-brand">Quality Code · User Focused · 鬼滅 RB</p>
+    </div>
+  </div>
 
 </body>
 </html>
