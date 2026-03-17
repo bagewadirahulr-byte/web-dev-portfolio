@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rahul Bagewadi | Epic Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- FIXED VIDEO BACKGROUND -->
+  <div class="video-container">
+    <video id="bgVideo" src="muzan_entry.mp4" muted playsinline preload="auto"></video>
+    <div class="video-overlay"></div>
+  </div>
+
+  <!-- SCROLLABLE CONTENT LAYER -->
+  <div class="scroller" id="scroller">
+    
+    <!-- 1. INTRO: FACE REVEAL -->
+    <section class="sec-intro panel" id="panelIntro">
+      <div class="content-box">
+        <h1 class="glitch-title">Rahul Bagewadi</h1>
+        <p class="subtitle">Full Stack Developer · Innovator</p>
+      </div>
+    </section>
+
+    <!-- 2. PROJECTS: THE FOOTSTEPS -->
+    <section class="sec-projects panel" id="panelProjects">
+      <div class="proj-step" id="proj1">
+        <h2>🔥 WeatherVerse</h2>
+        <p>Real-time weather tracking with atmospheric UI.</p>
+        <span class="tech-tag">HTML/CSS/JS</span>
+      </div>
+      <div class="proj-step" id="proj2">
+        <h2>Kanban TaskFlow</h2>
+        <p>Advanced drag-and-drop state management.</p>
+        <span class="tech-tag">JavaScript + LocalStorage</span>
+      </div>
+      <div class="proj-step" id="proj3">
+        <h2>QuizMaster Pro</h2>
+        <p>Interactive game logic and scoring algorithms.</p>
+        <span class="tech-tag">AJAX / DOM Logic</span>
+      </div>
+      <div class="proj-step" id="proj4">
+        <h2>SnapURL API</h2>
+        <p>Backend routing, DB storage, QR gen.</p>
+        <span class="tech-tag">Python Flask + SQLite</span>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS: THE HASHIRA AMBUSH -->
+    <section class="sec-skills panel" id="panelSkills">
+      <div class="skills-hud">
+        <h2 class="section-title">Combat Stats (Skills)</h2>
+        <div class="skill-bar"><div class="fill html-fill"></div><span>HTML5 [85%]</span></div>
+        <div class="skill-bar"><div class="fill css-fill"></div><span>CSS3 / Animations [82%]</span></div>
+        <div class="skill-bar"><div class="fill js-fill"></div><span>JavaScript [75%]</span></div>
+        <div class="skill-bar"><div class="fill py-fill"></div><span>Python / Flask [70%]</span></div>
+      </div>
+    </section>
+
+    <!-- 4. CONTACT: THE TURN -->
+    <section class="sec-contact panel" id="panelContact">
+      <div class="contact-box">
+        <h2 class="section-title">Start a Mission</h2>
+        <p style="margin-bottom: 2rem;">"The bond between Developer and Code cannot be severed."</p>
+        <div class="socials">
+          <a href="https://github.com/bagewadirahulr-byte" target="_blank">GitHub</a>
+          <a href="https://linkedin.com/in/rahul-r-bagewadi-4279012a7/" target="_blank">LinkedIn</a>
+          <a href="https://www.instagram.com/rahul__bagewadi" target="_blank">Instagram</a>
+          <a href="mailto:bagewadirahulr@gmail.com">Email</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- HUD Loader (Optional) -->
+  <div id="loader">
+    <div class="blood-drop"></div>
+    <p>Loading Infinity Castle...</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
