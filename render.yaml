@@ -3,8 +3,9 @@ services:
     name: snapurl
     env: python
     plan: free
-    buildCommand: pip install -r python-url-shortener/requirements.txt
-    startCommand: gunicorn --chdir python-url-shortener app:app
+    rootDir: python-url-shortener
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
     envVars:
       - key: FLASK_DEBUG
         value: "false"
