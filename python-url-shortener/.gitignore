@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+env/
+.env/
+.venv/
+
+# Database (auto-created on first run)
+*.db
+*.sqlite
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

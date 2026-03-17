@@ -507,7 +507,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">Flask</span><span class="stack-tag">SQLite</span><span class="stack-tag">QR Code</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/url-shortener" target="_blank" style="text-decoration:none">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/python-url-shortener" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -525,7 +525,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">CSV</span><span class="stack-tag">CLI</span><span class="stack-tag">File I/O</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/project1-expense-tracker" target="_blank" style="text-decoration:none">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/python-expense-tracker" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -543,7 +543,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">OOP</span><span class="stack-tag">Algorithms</span><span class="stack-tag">Data Structures</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/project2-weather-cli" target="_blank" style="text-decoration:none">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/python-weather-cli" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -693,51 +693,27 @@ const skillObs=new IntersectionObserver(entries=>{
 },{threshold:0.3});
 document.querySelectorAll('.skill-card').forEach(c=>skillObs.observe(c));
 
-// ===== CONTACT (sends via Formspree) =====
-async function sendMsg(){
+// ===== CONTACT (direct email fallback wrapper) =====
+function sendMsg(){
   const n=document.getElementById('cName').value.trim();
   const e=document.getElementById('cEmail').value.trim();
   const s=document.getElementById('cSubject').value.trim();
   const m=document.getElementById('cMessage').value.trim();
   if(!n||!e){alert('Please fill in name and email!');return;}
-  const btn=document.getElementById('sendMsgBtn');
-  btn.disabled=true;btn.textContent='⏳ Sending...';
-  try{
-    const res=await fetch('https://formspree.io/f/xpwzgkvr',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({name:n,email:e,subject:s,message:m})
-    });
-    if(res.ok){
-      const toast=document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'),4000);
-      document.getElementById('cName').value='';
-      document.getElementById('cEmail').value='';
-      document.getElementById('cSubject').value='';
-      document.getElementById('cMessage').value='';
-    } else {
-      // Fallback: open mailto link
-      const subject=encodeURIComponent(s||'Portfolio Contact');
-      const body=encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`);
-      window.open(`mailto:bagewadirahulr@gmail.com?subject=${subject}&body=${body}`);
-      const toast=document.getElementById('toast');
-      toast.textContent='📧 Opening email client...';
-      toast.classList.add('show');
-      setTimeout(()=>{toast.classList.remove('show');toast.textContent='✅ Message sent successfully!';},3000);
-    }
-  }catch(err){
-    // Fallback to mailto
-    const subject=encodeURIComponent(s||'Portfolio Contact');
-    const body=encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`);
-    window.open(`mailto:bagewadirahulr@gmail.com?subject=${subject}&body=${body}`);
-    const toast=document.getElementById('toast');
-    toast.textContent='📧 Opening email client...';
-    toast.classList.add('show');
-    setTimeout(()=>{toast.classList.remove('show');toast.textContent='✅ Message sent successfully!';},3000);
-  }finally{
-    btn.disabled=false;btn.textContent='🔥 Send Message';
-  }
+  
+  const subject=encodeURIComponent(s||'Portfolio Contact - ' + n);
+  const body=encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\nMessage:\n${m}`);
+  window.location.href=`mailto:bagewadirahulr@gmail.com?subject=${subject}&body=${body}`;
+  
+  const toast=document.getElementById('toast');
+  toast.textContent='📧 Opening your email client to send message...';
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),4000);
+  
+  document.getElementById('cName').value='';
+  document.getElementById('cEmail').value='';
+  document.getElementById('cSubject').value='';
+  document.getElementById('cMessage').value='';
 }
 
 // ===== AI VOICE ASSISTANT =====
