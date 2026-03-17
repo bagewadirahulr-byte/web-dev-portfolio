@@ -78,7 +78,8 @@ def make_qr_base64(url: str) -> str:
 
 
 def get_base_url():
-    return request.host_url.rstrip("/")
+    scheme = request.headers.get("X-Forwarded-Proto", request.scheme)
+    return f"{scheme}://{request.host}".rstrip("/")
 
 
 # ──────────────────────────────────────────────
@@ -463,7 +464,10 @@ def index():
 
 @app.route("/api/shorten", methods=["POST"])
 def shorten():
-    data = request.get_json(force=True)
+    data = request.get_json(force=True, silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid JSON payload"}), 400
+        
     original = (data.get("url") or "").strip()
     custom_code = (data.get("custom_code") or "").strip() or None
     expiry_days = data.get("expiry_days")
