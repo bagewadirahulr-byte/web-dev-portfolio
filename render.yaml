@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: snapurl
+    env: python
+    buildCommand: pip install -r python-url-shortener/requirements.txt
+    startCommand: gunicorn --chdir python-url-shortener app:app
+    envVars:
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: DATABASE_PATH
+        value: "/tmp/urls.db"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
