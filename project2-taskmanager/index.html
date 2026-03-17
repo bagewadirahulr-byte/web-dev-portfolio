@@ -76,6 +76,14 @@
     .btn-cancel:hover { background: rgba(255,255,255,0.1); }
     .btn-save { flex:2; background: linear-gradient(135deg, #3b82f6, #10b981); border: none; border-radius: 12px; padding: 12px; color: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
     .btn-save:hover { transform: translateY(-1px); }
+    @media(max-width:600px){
+      header{padding:20px 16px 0}
+      .logo{font-size:1.4rem}
+      .board{grid-template-columns:1fr!important;padding:16px;gap:16px}
+      .column{min-height:120px}
+      .modal{padding:20px 16px}
+      .form-row{grid-template-columns:1fr!important}
+    }
   </style>
 </head>
 <body>
@@ -179,6 +187,8 @@
           <div class="task-footer">
             <span class="task-tag">${task.tag || 'General'}</span>
             <div class="task-actions">
+              ${status !== 'todo' ? `<button class="task-btn" onclick="moveTask(${task.id}, '${status === 'done' ? 'progress' : 'todo'}')" title="Move Left">◀</button>` : ''}
+              ${status !== 'done' ? `<button class="task-btn" onclick="moveTask(${task.id}, '${status === 'todo' ? 'progress' : 'done'}')" title="Move Right">▶</button>` : ''}
               <button class="task-btn" onclick="deleteTask(${task.id})" title="Delete">🗑</button>
             </div>
           </div>
@@ -196,8 +206,12 @@
   function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
   function drop(e, status) {
     e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-    const task = tasks.find(t => t.id === draggedId);
-    if (task) { task.status = status; save(); render(); }
+    if (draggedId) { moveTask(draggedId, status); }
+  }
+
+  function moveTask(id, newStatus) {
+    const task = tasks.find(t => t.id === id);
+    if (task) { task.status = newStatus; save(); render(); }
   }
 
   function openModal() { document.getElementById('modalOverlay').classList.add('open'); document.getElementById('taskTitle').focus(); }

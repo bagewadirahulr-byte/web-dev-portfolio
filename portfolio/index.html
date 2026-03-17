@@ -25,13 +25,19 @@ body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);ov
 ::-webkit-scrollbar-thumb{background:var(--fire);border-radius:4px}
 
 /* === NAV === */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(4,4,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all 0.3s}
-.nav-logo{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,var(--fire),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all 0.3s}
+.nav-logo{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,var(--fire),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
 .nav-links{display:flex;gap:30px;list-style:none}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:color 0.3s;position:relative}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--fire);transition:width 0.3s}
 .nav-links a:hover{color:var(--fire)}
 .nav-links a:hover::after{width:100%}
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:110}
+.hamburger span{display:block;width:24px;height:2px;background:var(--gold);border-radius:2px;transition:all 0.3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* === SECTIONS === */
 section{position:relative;z-index:1}
@@ -78,7 +84,13 @@ section{position:relative;z-index:1}
 .about-text p{color:var(--muted);line-height:1.9;margin-bottom:16px;font-size:1rem}
 .about-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
 .about-tag{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 18px;font-size:0.82rem;color:var(--gold)}
-@media(max-width:768px){.about-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .hamburger{display:flex}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(4,4,10,0.98);border-bottom:1px solid var(--border);padding:12px 0}
+  .nav-links.open{display:flex}
+  .nav-links li a{display:block;padding:12px 24px;font-size:1rem;border-bottom:1px solid var(--border)}
+  .about-grid{grid-template-columns:1fr}
+}
 
 /* === SKILLS === */
 #skills{padding:100px 40px;background:linear-gradient(180deg,var(--dark) 0%,var(--dark2) 50%,var(--dark) 100%)}
@@ -112,10 +124,9 @@ section{position:relative;z-index:1}
 .stone .skill-fill{background:linear-gradient(90deg,#8b5cf6,#c4b5fd)}
 .serpent .skill-fill{background:linear-gradient(90deg,#22c55e,#86efac)}
 
-/* === PROJECTS === */
-#projects{padding:100px 40px}
+#projects{padding:80px 20px}
 .projects-inner{max-width:1100px;margin:0 auto}
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px}
 .proj-card{background:var(--dark3);border:1px solid var(--border);border-radius:22px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
 .proj-card:hover{transform:translateY(-8px);box-shadow:0 25px 60px rgba(196,30,58,0.2)}
 .proj-banner{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative}
@@ -186,9 +197,30 @@ footer p{color:var(--muted);font-size:0.88rem}
 .sec-btn{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:50px;padding:5px 14px;font-size:0.75rem;color:var(--gold);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
 .sec-btn:hover{background:rgba(255,215,0,0.15)}
 
-/* SCROLL ANIMATIONS */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
+
+/* === MOBILE FULL FIX === */
+@media(max-width:600px){
+  #about{padding:80px 20px}
+  #skills{padding:80px 20px}
+  #projects{padding:80px 20px}
+  #python-projects{padding:80px 20px}
+  #contact{padding:80px 20px}
+  .projects-grid{grid-template-columns:1fr!important}
+  .breathing-forms{grid-template-columns:1fr!important}
+  .hero-title{font-size:clamp(2rem,12vw,3.5rem)}
+  .hero-badge{font-size:0.75rem;padding:7px 14px;letter-spacing:1px}
+  .hero-tag{font-size:0.9rem}
+  .hero-btns{gap:12px}
+  .btn-fire,.btn-outline{padding:14px 24px;font-size:0.95rem}
+  #assistantBtn{bottom:16px;right:16px;width:56px;height:56px}
+  #assistantPanel{width:calc(100vw - 32px);right:16px;bottom:88px}
+  .contact-form{padding:24px 16px}
+  .form-row{grid-template-columns:1fr!important}
+  footer{padding:30px 20px}
+  .social-links{gap:12px}
+}
 </style>
 </head>
 <body>
@@ -198,13 +230,16 @@ footer p{color:var(--muted);font-size:0.88rem}
 <!-- NAV -->
 <nav>
   <div class="nav-logo">鬼滅 · RB</div>
-  <ul class="nav-links">
-    <li><a href="#hero">Home</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#python-projects">🐍 Python</a></li>
-    <li><a href="#contact">Contact</a></li>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero" onclick="closeNav()">Home</a></li>
+    <li><a href="#about" onclick="closeNav()">About</a></li>
+    <li><a href="#skills" onclick="closeNav()">Skills</a></li>
+    <li><a href="#projects" onclick="closeNav()">Projects</a></li>
+    <li><a href="#python-projects" onclick="closeNav()">🐍 Python</a></li>
+    <li><a href="#contact" onclick="closeNav()">Contact</a></li>
   </ul>
 </nav>
 
@@ -403,8 +438,8 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">HTML5</span><span class="stack-tag">CSS3</span><span class="stack-tag">JavaScript</span><span class="stack-tag">OpenWeather API</span>
           </div>
           <div class="proj-links">
-            <button class="proj-link primary" onclick="window.open('http://localhost:8080/project1-weather/index.html','_blank')">🚀 Live Demo</button>
-            <button class="proj-link secondary">📂 GitHub</button>
+            <a class="proj-link primary" href="../project1-weather/index.html" target="_blank">🚀 Live Demo</a>
+            <a class="proj-link secondary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/project1-weather" target="_blank" style="text-decoration:none">📂 GitHub</a>
           </div>
         </div>
       </div>
@@ -421,8 +456,8 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">HTML5</span><span class="stack-tag">CSS3</span><span class="stack-tag">JavaScript</span><span class="stack-tag">LocalStorage</span>
           </div>
           <div class="proj-links">
-            <button class="proj-link primary" onclick="window.open('http://localhost:8080/project2-taskmanager/index.html','_blank')">🚀 Live Demo</button>
-            <button class="proj-link secondary">📂 GitHub</button>
+            <a class="proj-link primary" href="../project2-taskmanager/index.html" target="_blank">🚀 Live Demo</a>
+            <a class="proj-link secondary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/project2-taskmanager" target="_blank" style="text-decoration:none">📂 GitHub</a>
           </div>
         </div>
       </div>
@@ -439,8 +474,8 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">HTML5</span><span class="stack-tag">CSS3</span><span class="stack-tag">JavaScript</span><span class="stack-tag">Game Logic</span>
           </div>
           <div class="proj-links">
-            <button class="proj-link primary" onclick="window.open('http://localhost:8080/project3-quiz/index.html','_blank')">🚀 Live Demo</button>
-            <button class="proj-link secondary">📂 GitHub</button>
+            <a class="proj-link primary" href="../project3-quiz/index.html" target="_blank">🚀 Live Demo</a>
+            <a class="proj-link secondary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/project3-quiz" target="_blank" style="text-decoration:none">📂 GitHub</a>
           </div>
         </div>
       </div>
@@ -472,7 +507,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">Flask</span><span class="stack-tag">SQLite</span><span class="stack-tag">QR Code</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte" target="_blank">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/url-shortener" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -490,7 +525,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">CSV</span><span class="stack-tag">CLI</span><span class="stack-tag">File I/O</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte" target="_blank">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/project1-expense-tracker" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -508,7 +543,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">OOP</span><span class="stack-tag">Algorithms</span><span class="stack-tag">Data Structures</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte" target="_blank">🐙 GitHub</a>
+            <a class="proj-link primary" href="https://github.com/bagewadirahulr-byte/project2-weather-cli" target="_blank" style="text-decoration:none">🐙 GitHub</a>
             <span class="proj-link secondary">🐍 Python</span>
           </div>
         </div>
@@ -547,7 +582,7 @@ footer p{color:var(--muted);font-size:0.88rem}
         <label>Message</label>
         <textarea class="form-control" id="cMessage" rows="5" placeholder="Tell me about your project or opportunity..."></textarea>
       </div>
-      <button class="submit-btn" onclick="sendMsg()">🔥 Send Message</button>
+      <button class="submit-btn" onclick="sendMsg()" id="sendMsgBtn">🔥 Send Message</button>
     </div>
   </div>
 </section>
@@ -561,7 +596,7 @@ footer p{color:var(--muted);font-size:0.88rem}
     <a href="mailto:bagewadirahulr@gmail.com" target="_blank" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="Email">📧</a>
   </div>
   <p>⚔ "The bond between Rahul and Code cannot be severed" ⚔</p>
-  <p style="margin-top:8px;font-size:0.8rem">© 2025 Rahul Bagewadi · Built with 🔥 and JavaScript</p>
+  <p style="margin-top:8px;font-size:0.8rem">© 2025–2028 Rahul Bagewadi · Built with 🔥 and JavaScript</p>
 </footer>
 
 <!-- TOAST -->
@@ -658,18 +693,51 @@ const skillObs=new IntersectionObserver(entries=>{
 },{threshold:0.3});
 document.querySelectorAll('.skill-card').forEach(c=>skillObs.observe(c));
 
-// ===== CONTACT =====
-function sendMsg(){
+// ===== CONTACT (sends via Formspree) =====
+async function sendMsg(){
   const n=document.getElementById('cName').value.trim();
   const e=document.getElementById('cEmail').value.trim();
+  const s=document.getElementById('cSubject').value.trim();
+  const m=document.getElementById('cMessage').value.trim();
   if(!n||!e){alert('Please fill in name and email!');return;}
-  const toast=document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),4000);
-  document.getElementById('cName').value='';
-  document.getElementById('cEmail').value='';
-  document.getElementById('cSubject').value='';
-  document.getElementById('cMessage').value='';
+  const btn=document.getElementById('sendMsgBtn');
+  btn.disabled=true;btn.textContent='⏳ Sending...';
+  try{
+    const res=await fetch('https://formspree.io/f/xpwzgkvr',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({name:n,email:e,subject:s,message:m})
+    });
+    if(res.ok){
+      const toast=document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),4000);
+      document.getElementById('cName').value='';
+      document.getElementById('cEmail').value='';
+      document.getElementById('cSubject').value='';
+      document.getElementById('cMessage').value='';
+    } else {
+      // Fallback: open mailto link
+      const subject=encodeURIComponent(s||'Portfolio Contact');
+      const body=encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`);
+      window.open(`mailto:bagewadirahulr@gmail.com?subject=${subject}&body=${body}`);
+      const toast=document.getElementById('toast');
+      toast.textContent='📧 Opening email client...';
+      toast.classList.add('show');
+      setTimeout(()=>{toast.classList.remove('show');toast.textContent='✅ Message sent successfully!';},3000);
+    }
+  }catch(err){
+    // Fallback to mailto
+    const subject=encodeURIComponent(s||'Portfolio Contact');
+    const body=encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`);
+    window.open(`mailto:bagewadirahulr@gmail.com?subject=${subject}&body=${body}`);
+    const toast=document.getElementById('toast');
+    toast.textContent='📧 Opening email client...';
+    toast.classList.add('show');
+    setTimeout(()=>{toast.classList.remove('show');toast.textContent='✅ Message sent successfully!';},3000);
+  }finally{
+    btn.disabled=false;btn.textContent='🔥 Send Message';
+  }
 }
 
 // ===== AI VOICE ASSISTANT =====
@@ -713,6 +781,18 @@ function stopSpeech(){
 // Load voices
 if('speechSynthesis' in window){
   window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+}
+
+// ===== HAMBURGER NAV =====
+function toggleNav(){
+  const btn=document.getElementById('hamburgerBtn');
+  const links=document.getElementById('navLinks');
+  btn.classList.toggle('open');
+  links.classList.toggle('open');
+}
+function closeNav(){
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.getElementById('navLinks').classList.remove('open');
 }
 </script>
 </body>

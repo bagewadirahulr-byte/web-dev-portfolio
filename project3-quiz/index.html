@@ -76,6 +76,19 @@
     .r-stat .rl { font-size: 0.75rem; color: var(--muted); }
     .btn-retry { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: #fff; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform 0.2s; }
     .btn-retry:hover { transform: translateY(-2px); }
+    @media(max-width:600px){
+      body{padding:12px}
+      .start-card,.result-card{padding:28px 18px}
+      .start-title{font-size:1.8rem}
+      .start-stats{grid-template-columns:repeat(3,1fr);gap:8px}
+      .options-grid{grid-template-columns:1fr!important}
+      .question-card{padding:22px 16px}
+      .q-text{font-size:1.05rem}
+      .quiz-header{gap:8px}
+      .score-badge,.timer-badge{padding:6px 12px;font-size:0.82rem}
+      .result-stats{grid-template-columns:repeat(3,1fr);gap:8px}
+      .final-score{font-size:3rem}
+    }
   </style>
 </head>
 <body>
@@ -184,7 +197,7 @@
     timer = setInterval(() => {
       timeLeft--;
       updateTimer();
-      if (timeLeft <= 0) { clearInterval(timer); wrong++; timeoutAnswer(); }
+      if (timeLeft <= 0) { clearInterval(timer); timeoutAnswer(); }
     }, 1000);
   }
 

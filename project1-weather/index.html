@@ -79,6 +79,19 @@
     .quick-cities { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
     .quick-btn { background: var(--card); border: 1px solid var(--border); border-radius: 50px; padding: 8px 18px; color: var(--muted); font-size: 0.85rem; font-family: inherit; cursor: pointer; transition: all 0.2s; }
     .quick-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.05); }
+    @media(max-width:600px){
+      .container{padding:20px 12px}
+      header h1{font-size:1.8rem}
+      .search-box{flex-direction:column}
+      .btn{width:100%;padding:14px}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .city-row{flex-direction:column;gap:10px}
+      .temp-icon{text-align:left}
+      .weather-icon{font-size:3.5rem}
+      .temperature{font-size:3rem}
+      .forecast-grid{grid-template-columns:repeat(2,1fr)}
+      .quick-cities{gap:8px}
+    }
   </style>
 </head>
 <body>
@@ -278,8 +291,51 @@
 
       } catch (err) {
         document.getElementById('loading').classList.remove('show');
-        showError('Network error. Check your connection.');
-        console.error(err);
+        console.warn('Network or API error, falling back to mock data.', err);
+        showMockData(city);
+      }
+    }
+
+    function showMockData(city) {
+      document.getElementById('error').classList.remove('show');
+      
+      // Mock Current Weather
+      document.getElementById('cityName').textContent = `${city} (MOCK)`;
+      document.getElementById('cityDate').textContent = new Date().toUTCString().replace(' GMT','');
+      const info = window.getWeatherInfo(1); // Partly cloudy
+      document.getElementById('weatherDesc').textContent = info.d;
+      document.getElementById('weatherIcon').textContent = info.i;
+      
+      document.getElementById('temperature').textContent = `28°C`;
+      document.getElementById('humidity').textContent = `65%`;
+      document.getElementById('wind').textContent = `12 km/h`;
+      document.getElementById('visibility').textContent = `0 mm`;
+      document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain';
+      document.getElementById('feelsLike').textContent = `30°C`;
+      document.getElementById('pressure').textContent = `1012 hPa`;
+      document.getElementById('clouds').textContent = `40%`;
+      
+      document.getElementById('mainCard').classList.add('show');
+
+      // Mock Forecast
+      const grid = document.getElementById('forecastGrid');
+      grid.innerHTML = '';
+      let dt = new Date();
+      for (let j=0; j<5; j++) {
+        dt.setHours(dt.getHours() + 3);
+        const code = j % 2 === 0 ? 0 : 3;
+        const temp = 25 + j;
+        const inf = window.getWeatherInfo(code);
+        
+        const card = document.createElement('div');
+        card.className = 'forecast-card show';
+        card.innerHTML = `
+          <div class="forecast-day">${days[dt.getDay()]} ${dt.getHours()}:00</div>
+          <div class="forecast-icon">${inf.i}</div>
+          <div class="forecast-temp">${temp}°C</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${inf.d}</div>
+        `;
+        grid.appendChild(card);
       }
     }
 
