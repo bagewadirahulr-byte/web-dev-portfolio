@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuizMaster – Web Dev Quiz Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a15;
+      --card: #131320;
+      --border: rgba(255,255,255,0.08);
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-x: hidden; }
+    body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 30% 30%, rgba(139,92,246,0.1) 0%, transparent 60%), radial-gradient(ellipse at 70% 70%, rgba(236,72,153,0.08) 0%, transparent 60%); pointer-events:none; z-index:0; }
+
+    .game-wrap { position: relative; z-index:1; width: 100%; max-width: 700px; }
+
+    /* SCREENS */
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeUp 0.5s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);} }
+
+    /* START SCREEN */
+    .start-card { background: var(--card); border: 1px solid var(--border); border-radius: 28px; padding: 48px; text-align: center; }
+    .game-logo { font-size: 4rem; margin-bottom: 8px; }
+    .start-title { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+    .start-sub { color: var(--muted); font-size: 1rem; margin-bottom: 36px; line-height: 1.6; }
+    .start-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 36px; }
+    .start-stat { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .start-stat .num { font-size: 1.6rem; font-weight: 900; color: var(--purple); }
+    .start-stat .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .btn-start { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 18px; color: #fff; font-size: 1.1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; box-shadow: 0 4px 30px rgba(139,92,246,0.4); letter-spacing: 0.5px; }
+    .btn-start:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(139,92,246,0.6); }
+
+    /* QUIZ SCREEN */
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .progress-wrap { flex: 1; }
+    .progress-label { font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 50px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--pink)); border-radius: 50px; transition: width 0.5s ease; }
+    .score-badge { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); border-radius: 50px; padding: 8px 20px; font-size: 0.9rem; font-weight: 700; color: var(--purple); white-space: nowrap; }
+    .timer-badge { background: rgba(6,182,212,0.15); border: 1px solid rgba(6,182,212,0.3); border-radius: 50px; padding: 8px 20px; font-size: 0.9rem; font-weight: 700; color: var(--cyan); white-space: nowrap; }
+    .timer-badge.urgent { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: var(--red); animation: pulse 0.5s ease infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.05);} }
+
+    .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 36px; margin-bottom: 20px; }
+    .q-category { font-size: 0.8rem; color: var(--purple); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .q-text { font-size: 1.25rem; font-weight: 600; line-height: 1.5; }
+
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .option-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 18px 20px; color: var(--text); font-size: 0.95rem; font-family: inherit; cursor: pointer; text-align: left; transition: all 0.25s; display: flex; align-items: center; gap: 12px; font-weight: 500; }
+    .option-btn:hover:not(:disabled) { border-color: var(--purple); background: rgba(139,92,246,0.08); transform: translateY(-2px); }
+    .option-btn.correct { background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green); }
+    .option-btn.wrong { background: rgba(239,68,68,0.12); border-color: var(--red); color: var(--red); }
+    .option-btn:disabled { cursor: default; }
+    .opt-num { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+
+    /* RESULT */
+    .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 28px; padding: 48px; text-align: center; }
+    .result-emoji { font-size: 5rem; margin-bottom: 16px; display: block; }
+    .result-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 8px; }
+    .result-sub { color: var(--muted); margin-bottom: 32px; }
+    .final-score { font-size: 4rem; font-weight: 900; background: linear-gradient(135deg, var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 32px; }
+    .result-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 36px; }
+    .r-stat { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+    .r-stat .rv { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+    .r-stat .rl { font-size: 0.75rem; color: var(--muted); }
+    .btn-retry { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: #fff; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform 0.2s; }
+    .btn-retry:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+<div class="game-wrap">
+
+  <!-- START -->
+  <div class="screen active" id="startScreen">
+    <div class="start-card">
+      <div class="game-logo">🧠</div>
+      <div class="start-title">QuizMaster</div>
+      <p class="start-sub">Test your Web Development knowledge!<br>10 questions · 20 seconds each · Beat the timer!</p>
+      <div class="start-stats">
+        <div class="start-stat"><div class="num">10</div><div class="lbl">Questions</div></div>
+        <div class="start-stat"><div class="num">20s</div><div class="lbl">Per Question</div></div>
+        <div class="start-stat"><div class="num">4</div><div class="lbl">Options Each</div></div>
+      </div>
+      <button class="btn-start" id="startBtn" onclick="startGame()">🚀 Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="quizScreen">
+    <div class="quiz-header">
+      <div class="progress-wrap">
+        <div class="progress-label" id="progressLabel">Question 1 of 10</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+      </div>
+      <div class="score-badge">⭐ <span id="scoreDisplay">0</span></div>
+      <div class="timer-badge" id="timerBadge">⏱ <span id="timerDisplay">20</span>s</div>
+    </div>
+    <div class="question-card">
+      <div class="q-category" id="qCategory"></div>
+      <div class="q-text" id="qText"></div>
+    </div>
+    <div class="options-grid" id="optionsGrid"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="resultScreen">
+    <div class="result-card">
+      <span class="result-emoji" id="resultEmoji"></span>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="final-score" id="finalScore"></div>
+      <div class="result-stats">
+        <div class="r-stat"><div class="rv" style="color:#10b981" id="correctCount"></div><div class="rl">Correct</div></div>
+        <div class="r-stat"><div class="rv" style="color:#ef4444" id="wrongCount"></div><div class="rl">Wrong</div></div>
+        <div class="r-stat"><div class="rv" style="color:#f59e0b" id="skippedCount"></div><div class="rl">Skipped</div></div>
+      </div>
+      <button class="btn-retry" onclick="restartGame()">🔄 Play Again</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    { cat: '🌐 HTML', text: 'What does HTML stand for?', opts: ['HyperText Markup Language','HighText Machine Language','HyperTool Multi Language','HyperText Making Language'], ans: 0 },
+    { cat: '🎨 CSS', text: 'Which property is used to change the background color in CSS?', opts: ['color','background-color','bg-color','background'], ans: 1 },
+    { cat: '⚡ JavaScript', text: 'Inside which HTML element do we put JavaScript?', opts: ['<javascript>','<js>','<script>','<code>'], ans: 2 },
+    { cat: '⚡ JavaScript', text: 'How do you declare a variable in modern JavaScript (ES6+)?', opts: ['var x = 5','variable x = 5','let x = 5','v x = 5'], ans: 2 },
+    { cat: '🌐 HTML', text: 'Which HTML tag is used to define an internal style sheet?', opts: ['<css>','<style>','<script>','<link>'], ans: 1 },
+    { cat: '🎨 CSS', text: 'Which CSS property controls the text size?', opts: ['font-style','text-size','font-size','text-style'], ans: 2 },
+    { cat: '⚡ JavaScript', text: 'How do you write "Hello World" in an alert box?', opts: ['msg("Hello World")','alertBox("Hello World")','alert("Hello World")','msgBox("Hello World")'], ans: 2 },
+    { cat: '🌐 HTML', text: 'What is the correct HTML element for the largest heading?', opts: ['<h6>','<heading>','<h1>','<head>'], ans: 2 },
+    { cat: '🎨 CSS', text: 'Which property makes a flex container\'s children wrap?', opts: ['flex-flow','flex-wrap','flex-align','wrap'], ans: 1 },
+    { cat: '⚡ JavaScript', text: 'Which method converts JSON text to a JavaScript object?', opts: ['JSON.parse()','JSON.stringify()','JSON.convert()','JSON.toObject()'], ans: 0 },
+  ];
+
+  let current = 0, score = 0, correct = 0, wrong = 0, timer = null, timeLeft = 20;
+
+  const labels = ['A', 'B', 'C', 'D'];
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function startGame() { current = 0; score = 0; correct = 0; wrong = 0; showScreen('quizScreen'); showQuestion(); }
+
+  function showQuestion() {
+    if (current >= questions.length) { endGame(); return; }
+    const q = questions[current];
+    document.getElementById('progressLabel').textContent = `Question ${current+1} of ${questions.length}`;
+    document.getElementById('progressFill').style.width = `${((current+1)/questions.length)*100}%`;
+    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('qCategory').textContent = q.cat;
+    document.getElementById('qText').textContent = q.text;
+
+    const grid = document.getElementById('optionsGrid');
+    grid.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="opt-num">${labels[i]}</span>${opt}`;
+      btn.onclick = () => selectAnswer(i);
+      grid.appendChild(btn);
+    });
+
+    startTimer();
+  }
+
+  function startTimer() {
+    clearInterval(timer); timeLeft = 20;
+    updateTimer();
+    timer = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) { clearInterval(timer); wrong++; timeoutAnswer(); }
+    }, 1000);
+  }
+
+  function updateTimer() {
+    document.getElementById('timerDisplay').textContent = timeLeft;
+    const badge = document.getElementById('timerBadge');
+    badge.classList.toggle('urgent', timeLeft <= 5);
+  }
+
+  function selectAnswer(idx) {
+    clearInterval(timer);
+    const q = questions[current];
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+    btns[q.ans].classList.add('correct');
+    if (idx === q.ans) { correct++; score += 10; btns[idx].classList.add('correct'); }
+    else { wrong++; btns[idx].classList.add('wrong'); }
+    document.getElementById('scoreDisplay').textContent = score;
+    setTimeout(() => { current++; showQuestion(); }, 1200);
+  }
+
+  function timeoutAnswer() {
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+    btns[questions[current].ans].classList.add('correct');
+    setTimeout(() => { current++; showQuestion(); }, 1200);
+  }
+
+  function endGame() {
+    showScreen('resultScreen');
+    const skipped = questions.length - correct - wrong;
+    const pct = Math.round((correct / questions.length) * 100);
+    let emoji, title, sub;
+    if (pct >= 90) { emoji='🏆'; title='Outstanding!'; sub='You are a Web Dev Genius!'; }
+    else if (pct >= 70) { emoji='🌟'; title='Great Job!'; sub='You know your stuff!'; }
+    else if (pct >= 50) { emoji='👍'; title='Not Bad!'; sub='Keep learning and try again!'; }
+    else { emoji='💪'; title='Keep Practicing!'; sub='Every expert was once a beginner!'; }
+    document.getElementById('resultEmoji').textContent = emoji;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultSub').textContent = sub;
+    document.getElementById('finalScore').textContent = `${score} pts`;
+    document.getElementById('correctCount').textContent = correct;
+    document.getElementById('wrongCount').textContent = wrong;
+    document.getElementById('skippedCount').textContent = skipped;
+  }
+
+  function restartGame() { startGame(); }
+</script>
+</body>
+</html>
