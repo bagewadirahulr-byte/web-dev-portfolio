@@ -6,6 +6,7 @@
 <title>Rahul Bagewadi – Web Developer Portfolio</title>
 <meta name="description" content="Web Developer portfolio inspired by Demon Slayer anime. Featuring animated effects and AI voice assistant."/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<script src="../shared/error-handler.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -448,6 +449,22 @@ footer p{color:var(--muted);font-size:0.88rem}
       <p class="sec-sub">Real projects built with passion and code</p>
     </div>
     <div class="projects-grid">
+      <div class="proj-card featured" style="grid-column: 1 / -1; border-color: var(--fire); box-shadow: 0 0 40px rgba(196,30,58,0.15);">
+        <div class="proj-banner" style="background-image: url('job_assistant.png'); background-size: cover; background-position: center; height: 300px;">
+          <div class="proj-tag" style="background: var(--fire);">🔥 Featured · AI</div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-title" style="font-size: 1.8rem; color: var(--gold);">Rahul AI Job Assistant (PRO)</div>
+          <div class="proj-desc" style="font-size: 1.05rem; line-height: 1.7;">A premium, full-stack AI job matching platform featuring a stunning glassmorphism dashboard, secure user accounts, and integrated Razorpay & UPI payment flows. Includes mock AI matching, advanced search filters, and a complete PRO upgrade experience.</div>
+          <div class="proj-stack">
+            <span class="stack-tag">Python (Flask)</span><span class="stack-tag">SQLite</span><span class="stack-tag">Razorpay API</span><span class="stack-tag">Capacitor</span><span class="stack-tag">AI Integration</span>
+          </div>
+          <div class="proj-links">
+            <a class="proj-link primary" href="https://rahul-ai-job-asistant.onrender.com/" target="_blank" rel="noopener noreferrer" id="job-assistant-link" style="text-decoration:none; padding: 14px 28px;">🚀 Launch Demo</a>
+            <a class="proj-link secondary" href="https://github.com/bagewadirahulr-byte/rahul-ai-job-assistant" target="_blank" rel="noopener noreferrer" style="text-decoration:none; padding: 14px 28px;">🐙 Source Code</a>
+          </div>
+        </div>
+      </div>
       <div class="proj-card">
         <div class="proj-banner weather">
           <span>🌤</span>
@@ -516,7 +533,6 @@ footer p{color:var(--muted);font-size:0.88rem}
       <p class="sec-sub">Backend Python projects uploaded on GitHub — showcasing versatility beyond frontend</p>
     </div>
     <div class="projects-grid">
-
       <div class="proj-card">
         <div class="proj-banner" style="background:linear-gradient(135deg,#1a2a1a,#0d1f0d)">
           <span>🔗</span>
@@ -529,7 +545,7 @@ footer p{color:var(--muted);font-size:0.88rem}
             <span class="stack-tag">Python</span><span class="stack-tag">Flask</span><span class="stack-tag">SQLite</span><span class="stack-tag">QR Code</span>
           </div>
           <div class="proj-links">
-            <a class="proj-link primary" href="https://snapurl-qd00.onrender.com" target="_blank" style="text-decoration:none">🚀 Live Demo</a>
+            <a class="proj-link primary" href="https://snapurl-qd00.onrender.com" target="_blank" id="url-shortener-link" style="text-decoration:none">🚀 Live Demo</a>
             <a class="proj-link secondary" href="https://github.com/bagewadirahulr-byte/web-dev-portfolio/tree/main/python-url-shortener" target="_blank" style="text-decoration:none">🐙 GitHub</a>
           </div>
         </div>
@@ -613,13 +629,13 @@ footer p{color:var(--muted);font-size:0.88rem}
 <footer>
   <div class="footer-logo">鬼滅 · Rahul Bagewadi</div>
   <div class="social-links">
-    <a href="https://github.com/bagewadirahulr-byte" target="_blank" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="GitHub">🐙</a>
-    <a href="https://linkedin.com/in/rahul-r-bagewadi-4279012a7/" target="_blank" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="LinkedIn">💼</a>
-    <a href="https://www.instagram.com/rahul__bagewadi?igsh=MXMxd3cya3M4MnFkZg%3D%3D" target="_blank" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="Instagram">📸</a>
-    <a href="mailto:bagewadirahulr@gmail.com" target="_blank" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="Email">📧</a>
+    <a href="https://github.com/bagewadirahulr-byte" target="_blank" rel="noopener noreferrer" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="GitHub">🐙</a>
+    <a href="https://linkedin.com/in/rahul-r-bagewadi-4279012a7/" target="_blank" rel="noopener noreferrer" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="LinkedIn">💼</a>
+    <a href="https://www.instagram.com/rahul__bagewadi?igsh=MXMxd3cya3M4MnFkZg%3D%3D" target="_blank" rel="noopener noreferrer" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="Instagram">📸</a>
+    <a href="mailto:bagewadirahulr@gmail.com" target="_blank" rel="noopener noreferrer" class="soc-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;color:white;" title="Email">📧</a>
   </div>
   <p>⚔ "The bond between Rahul and Code cannot be severed" ⚔</p>
-  <p style="margin-top:8px;font-size:0.8rem">© 2025–2028 Rahul Bagewadi · Built with 🔥 and JavaScript</p>
+  <p style="margin-top:8px;font-size:0.8rem">© <span id="copyright-year">2025–2028</span> Rahul Bagewadi · Built with 🔥 and JavaScript</p>
 </footer>
 
 <!-- TOAST -->
@@ -794,6 +810,10 @@ function sendMsg(){
 let panelOpen=false;
 let currentUtter=null;
 function toggleAssistant(){
+  if(!('speechSynthesis' in window)){
+    if(window.ErrorHandler) window.ErrorHandler.showToast('Voice features not supported by this browser.', 'info');
+    return;
+  }
   const panel=document.getElementById('assistantPanel');
   panelOpen=!panelOpen;
   panel.style.display=panelOpen?'block':'none';
@@ -802,7 +822,7 @@ function toggleAssistant(){
 const scripts={
   intro:`Greetings, honored Recruiter-san! I am Tanjiro, guide to Rahul Bagewadi's portfolio. Rahul is a passionate web development learner from India, dedicated to mastering the art of building modern web applications. Like a demon slayer training to master breathing forms, Rahul trains every day to become an exceptional web developer. He is creative, hardworking, and brings tremendous potential to any team!`,
   skills:`Let me tell you about Rahul's technical skills, which we call Breathing Forms! In Flame Breathing, Rahul has mastered HTML5 to 85 percent proficiency. In Water Breathing, his CSS3 and responsive design skills reach 82 percent. In Thunder Breathing, his JavaScript and DOM manipulation skills are at 75 percent. In Serpent Breathing, Rahul has strong Python skills — including file handling, Flask web framework, and building real backend projects! He also knows Git, GitHub, and VS Code very well. His future goals include React and Node.js. He is constantly growing stronger!`,
-  projects:`Rahul has completed three incredible projects! First, WeatherVerse — a real-time weather dashboard that fetches live data from APIs and shows beautiful animated weather cards. Second, TaskFlow — a Kanban board with drag and drop functionality, priorities, and local storage. Third, QuizMaster — an interactive timed quiz game for web development knowledge. Each project showcases his ability to build real, functional applications from scratch!`,
+  projects:`Rahul's latest masterpiece is the Rahul AI Job Assistant PRO! It is a massive full-stack application with a stunning glassmorphism dashboard, secure login systems, and real-world payment integrations like Razorpay. It helps users find their dream jobs using AI matching logic! He has also built WeatherVerse — a live dashboard fetching global weather data, TaskFlow — a drag-and-drop Kanban board for productivity, and QuizMaster — a timed web development quiz. Rahul's range as a developer is truly impressive!`,
   hire:`Dear Recruiter-san, Rahul Bagewadi would be an outstanding addition to your team! He is a fast learner, creative thinker, and dedicated developer. He brings enthusiasm, passion, and a growth mindset to every project. Whether it is an internship or junior developer role, Rahul will exceed your expectations! Please do not miss this opportunity. Select Rahul, and witness his journey from learner to master web developer! Thank you for visiting this portfolio!`
 };
 
@@ -844,6 +864,33 @@ function closeNav(){
   document.getElementById('hamburgerBtn').classList.remove('open');
   document.getElementById('navLinks').classList.remove('open');
 }
+
+// ===== ULTRA-STABILITY INIT =====
+window.addEventListener('load', () => {
+    // 1. Dynamic Year
+    if(window.ErrorHandler) window.ErrorHandler.updateCopyright('copyright-year', 2025);
+
+    // 2. Service Health Monitor
+    async function monitorServices() {
+        const jobLnk = document.getElementById('job-assistant-link');
+        const urlLnk = document.getElementById('url-shortener-link');
+
+        if(window.ErrorHandler) {
+            const jobUp = await window.ErrorHandler.checkHealth('https://rahul-ai-job-asistant.onrender.com/health');
+            if(jobLnk) {
+                jobLnk.textContent = jobUp ? '🚀 Launch Demo (Online)' : '🚀 Launch Demo (Waking Up...)';
+                if(!jobUp) jobLnk.style.filter = 'grayscale(0.3)';
+                else jobLnk.style.filter = 'none';
+            }
+
+            const urlUp = await window.ErrorHandler.checkHealth('https://snapurl-qd00.onrender.com');
+            if(urlLnk) {
+                urlLnk.textContent = urlUp ? '🚀 Live Demo (Online)' : '🚀 Live Demo (Waking Up...)';
+            }
+        }
+    }
+    monitorServices();
+});
 </script>
 </body>
 </html>

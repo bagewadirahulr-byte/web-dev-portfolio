@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeatherVerse – Live Weather Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <script src="../../shared/error-handler.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -105,6 +106,7 @@
     <header>
       <h1>🌤 WeatherVerse</h1>
       <p>Real-time weather dashboard — search any city worldwide</p>
+      <p id="syncTime" style="font-size: 0.75rem; color: var(--muted); margin-top: 4px;"></p>
     </header>
 
     <div class="search-box">
@@ -212,8 +214,8 @@
       document.getElementById('error').classList.remove('show');
 
       try {
-        // Step 1: Geocoding (Convert City Name to Coordinates)
-        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+        // Step 1: Geocoding (with Timeout)
+        const geoRes = await window.ErrorHandler.fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
         const geoData = await geoRes.json();
         
         if (!geoData.results || geoData.results.length === 0) {
@@ -225,74 +227,88 @@
         const loc = geoData.results[0];
         const lat = loc.latitude;
         const lon = loc.longitude;
-        const country = loc.country_code || '??';
-        const cityName = loc.name;
 
-        // Step 2: Fetch actual weather
+        // Step 2: Fetch actual weather (with Timeout)
         const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,surface_pressure,cloud_cover&hourly=temperature_2m,weather_code&timezone=auto`;
-        const weatherRes = await fetch(weatherUrl);
+        const weatherRes = await window.ErrorHandler.fetchWithTimeout(weatherUrl);
         const data = await weatherRes.json();
         
         document.getElementById('loading').classList.remove('show');
+        renderWeather(data, loc);
+        
+        // Update Sync Label
+        const syncEl = document.getElementById('syncTime');
+        if(syncEl) syncEl.textContent = `Last Synced: ${new Date().toLocaleTimeString()}`;
 
-        // Render Current Weather
-        const nowIdx = new Date().getHours();
-        const info = window.getWeatherInfo(data.current.weather_code);
-        
-        document.getElementById('cityName').textContent = `${cityName}, ${country}`;
-        document.getElementById('cityDate').textContent = new Date().toUTCString().replace(' GMT','');
-        document.getElementById('weatherDesc').textContent = info.d;
-        document.getElementById('weatherIcon').textContent = info.i;
-        
-        document.getElementById('temperature').textContent = `${Math.round(data.current.temperature_2m)}°C`;
-        document.getElementById('humidity').textContent = `${data.current.relative_humidity_2m}%`;
-        document.getElementById('wind').textContent = `${data.current.wind_speed_10m} km/h`;
-        document.getElementById('visibility').textContent = `${data.current.precipitation} mm`;
-        document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain'; // changed label slightly
-        document.getElementById('feelsLike').textContent = `${Math.round(data.current.apparent_temperature)}°C`;
-        document.getElementById('pressure').textContent = `${data.current.surface_pressure} hPa`;
-        document.getElementById('clouds').textContent = `${data.current.cloud_cover}%`;
-        
-        document.getElementById('mainCard').classList.add('show');
-
-        // Render Forecast (Next 5 intervals)
-        const grid = document.getElementById('forecastGrid');
-        grid.innerHTML = '';
-        
-        let startIdx = 0;
-        // find future time index
-        for(let i=0; i<data.hourly.time.length; i++){
-            if(new Date(data.hourly.time[i]).getTime() > Date.now()){
-                startIdx = i;
-                break;
-            }
-        }
-
-        // Get 5 forecasts, starting from next few hours, spaced by 3 hours
-        for (let j=0; j<5; j++) {
-          const hIdx = startIdx + (j*3);
-          if(hIdx >= data.hourly.time.length) break;
-          
-          const dt = new Date(data.hourly.time[hIdx]);
-          const code = data.hourly.weather_code[hIdx];
-          const temp = data.hourly.temperature_2m[hIdx];
-          const inf = window.getWeatherInfo(code);
-          
-          const card = document.createElement('div');
-          card.className = 'forecast-card show';
-          card.innerHTML = `
-            <div class="forecast-day">${days[dt.getDay()]} ${dt.getHours()}:00</div>
-            <div class="forecast-icon">${inf.i}</div>
-            <div class="forecast-temp">${Math.round(temp)}°C</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${inf.d}</div>
-          `;
-          grid.appendChild(card);
-        }
+        const cacheData = { data, loc, timestamp: Date.now() };
+        localStorage.setItem(`weather_${city.toLowerCase()}`, JSON.stringify(cacheData));
 
       } catch (err) {
         document.getElementById('loading').classList.remove('show');
-        console.warn('Network or API error, falling back to mock data.', err);
+        console.warn('Network or API error, checking cache.', err);
+        
+        try {
+          const cached = localStorage.getItem(`weather_${city.toLowerCase()}`);
+          if (cached) {
+            const { data, loc, timestamp } = JSON.parse(cached);
+            const age = (Date.now() - timestamp) / 1000 / 60; 
+            console.log(`Loading cached data for ${city}, age: ${Math.round(age)} mins`);
+            renderWeather(data, loc);
+            if (window.ErrorHandler) window.ErrorHandler.showToast('Offline: Showing cached data', 'info');
+            return;
+          }
+        } catch (e) {
+          console.error('LocalStorage access failed', e);
+        }
+        
+        if (window.ErrorHandler) window.ErrorHandler.showToast('API unreachable. Showing demo data.', 'info');
         showMockData(city);
+      }
+    }
+
+    function renderWeather(data, loc) {
+      const info = window.getWeatherInfo(data.current.weather_code);
+      document.getElementById('cityName').textContent = `${loc.name}, ${loc.country_code || '??'}`;
+      document.getElementById('cityDate').textContent = new Date().toUTCString().replace(' GMT','');
+      document.getElementById('weatherDesc').textContent = info.d;
+      document.getElementById('weatherIcon').textContent = info.i;
+      
+      document.getElementById('temperature').textContent = `${Math.round(data.current.temperature_2m)}°C`;
+      document.getElementById('humidity').textContent = `${data.current.relative_humidity_2m}%`;
+      document.getElementById('wind').textContent = `${data.current.wind_speed_10m} km/h`;
+      document.getElementById('visibility').textContent = `${data.current.precipitation} mm`;
+      document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain';
+      document.getElementById('feelsLike').textContent = `${Math.round(data.current.apparent_temperature)}°C`;
+      document.getElementById('pressure').textContent = `${data.current.surface_pressure} hPa`;
+      document.getElementById('clouds').textContent = `${data.current.cloud_cover}%`;
+      
+      document.getElementById('mainCard').classList.add('show');
+
+      const grid = document.getElementById('forecastGrid');
+      grid.innerHTML = '';
+      let startIdx = 0;
+      for(let i=0; i<data.hourly.time.length; i++) {
+        if(new Date(data.hourly.time[i]).getTime() > Date.now()) {
+          startIdx = i;
+          break;
+        }
+      }
+      for (let j=0; j<5; j++) {
+        const hIdx = startIdx + (j*3);
+        if(hIdx >= data.hourly.time.length) break;
+        const dt = new Date(data.hourly.time[hIdx]);
+        const code = data.hourly.weather_code[hIdx];
+        const temp = data.hourly.temperature_2m[hIdx];
+        const inf = window.getWeatherInfo(code);
+        const card = document.createElement('div');
+        card.className = 'forecast-card show';
+        card.innerHTML = `
+          <div class="forecast-day">${days[dt.getDay()]} ${dt.getHours()}:00</div>
+          <div class="forecast-icon">${inf.i}</div>
+          <div class="forecast-temp">${Math.round(temp)}°C</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${inf.d}</div>
+        `;
+        grid.appendChild(card);
       }
     }
 

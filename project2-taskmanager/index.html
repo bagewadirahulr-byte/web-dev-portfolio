@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TaskFlow – Kanban Board</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <script src="../../shared/error-handler.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -154,7 +155,13 @@
 </div>
 
 <script>
-  let tasks = JSON.parse(localStorage.getItem('taskflow') || '[]');
+  let tasks = [];
+  try {
+    tasks = JSON.parse(localStorage.getItem('taskflow') || '[]');
+  } catch (e) {
+    console.error('Storage access failed', e);
+    if (window.ErrorHandler) window.ErrorHandler.showToast('Could not load saved tasks. Using defaults.', 'info');
+  }
   let draggedId = null;
 
   const defaultTasks = [
@@ -168,7 +175,14 @@
 
   if (tasks.length === 0) { tasks = defaultTasks; save(); }
 
-  function save() { localStorage.setItem('taskflow', JSON.stringify(tasks)); }
+  function save() { 
+    try {
+      localStorage.setItem('taskflow', JSON.stringify(tasks)); 
+    } catch (e) {
+      console.warn('Could not save tasks', e);
+      if (window.ErrorHandler) window.ErrorHandler.showToast('Storage full or disabled. Changes won\'t persist.', 'info');
+    }
+  }
 
   function render() {
     ['todo', 'progress', 'done'].forEach(status => {

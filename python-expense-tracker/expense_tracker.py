@@ -8,7 +8,9 @@ import csv
 import os
 from datetime import datetime
 
-DATA_FILE = "expenses.json"
+# Get absolute path to the data file in the same directory as this script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "expenses.json")
 CATEGORIES = ["Food", "Transport", "Shopping", "Health", "Entertainment", "Utilities", "Other"]
 DIVIDER = "═" * 50
 
