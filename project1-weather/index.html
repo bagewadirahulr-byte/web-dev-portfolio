@@ -5,7 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeatherVerse – Live Weather Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
-  <script src="../../shared/error-handler.js"></script>
+  <script>
+    // 🛡️ SELF-HEALING CORE (In-lined for absolute reliability)
+    window.ErrorHandler = {
+      fetchWithTimeout: async (url, options = {}, timeout = 8000) => {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        try {
+          const response = await fetch(url, { ...options, signal: controller.signal });
+          clearTimeout(id);
+          return response;
+        } catch (error) {
+          clearTimeout(id);
+          throw error;
+        }
+      },
+      showToast: (msg, type = 'info') => {
+        const toast = document.createElement('div');
+        toast.style = `position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:${type==='info'?'#4f8ef7':'#ef4444'}; color:white; padding:12px 24px; border-radius:30px; z-index:9999; font-size:0.9rem; box-shadow:0 10px 30px rgba(0,0,0,0.5); animation: fadeUp 0.3s ease;`;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+      }
+    };
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -61,6 +84,40 @@
     .stat-icon { font-size: 1.5rem; margin-bottom: 8px; }
     .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--cyan); }
     .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    
+    /* LIVE BADGE */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16,185,129,0.15);
+      color: #10b981;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-left: 12px;
+      border: 1px solid rgba(16,185,129,0.2);
+      vertical-align: middle;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .live-badge.show { opacity: 1; }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+      70% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+      100% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+    }
 
     /* FORECAST */
     .forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin-bottom: 24px; }
@@ -106,7 +163,12 @@
     <header>
       <h1>🌤 WeatherVerse</h1>
       <p>Real-time weather dashboard — search any city worldwide</p>
-      <p id="syncTime" style="font-size: 0.75rem; color: var(--muted); margin-top: 4px;"></p>
+      <div id="serviceStatus" style="display:inline-flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--muted); margin-top:8px; background:rgba(255,255,255,0.03); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
+        <span id="statusDot" style="width:8px; height:8px; background:var(--muted); border-radius:50%; transition: all 0.3s;"></span>
+        <span id="statusText">Initial Load...</span>
+        <button onclick="getWeather()" style="background:none; border:none; color:var(--cyan); cursor:pointer; font-size:0.9rem; padding:0; margin-left:4px; display:inline-flex; align-items:center;" title="Refresh Now">🔄</button>
+      </div>
+      <p id="syncTime" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;"></p>
     </header>
 
     <div class="search-box">
@@ -130,6 +192,7 @@
       <div class="city-row">
         <div>
           <div class="city-name" id="cityName"></div>
+          <span id="liveBadge" class="live-badge"><span class="live-dot"></span>Live</span>
           <div class="city-date" id="cityDate"></div>
           <div class="weather-desc" id="weatherDesc"></div>
         </div>
@@ -214,17 +277,26 @@
       document.getElementById('error').classList.remove('show');
 
       try {
-        // Step 1: Geocoding (with Timeout)
-        const geoRes = await window.ErrorHandler.fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
-        const geoData = await geoRes.json();
-        
-        if (!geoData.results || geoData.results.length === 0) {
-          showError(`City "${city}" not found. Try Mumbai, London, or Tokyo.`);
-          document.getElementById('loading').classList.remove('show');
-          return;
+        // Step 1: Geocoding (with Timeout & Fallback)
+        let loc;
+        try {
+          const geoRes = await window.ErrorHandler.fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+          const geoData = await geoRes.json();
+          if (!geoData.results || geoData.results.length === 0) throw new Error('Not found');
+          loc = geoData.results[0];
+        } catch (e) {
+          console.warn('Primary geocoding failed, trying fallback...');
+          // Fallback geocoding (Nominatim - OSM)
+          const fallRes = await window.ErrorHandler.fetchWithTimeout(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
+          const fallData = await fallRes.json();
+          if (!fallData || fallData.length === 0) {
+            showError(`City "${city}" not found.`);
+            document.getElementById('loading').classList.remove('show');
+            return;
+          }
+          loc = { name: fallData[0].display_name.split(',')[0], latitude: fallData[0].lat, longitude: fallData[0].lon, country_code: '' };
         }
 
-        const loc = geoData.results[0];
         const lat = loc.latitude;
         const lon = loc.longitude;
 
@@ -235,6 +307,7 @@
         
         document.getElementById('loading').classList.remove('show');
         renderWeather(data, loc);
+        updateStatus('online', 'Live Updates Active');
         
         // Update Sync Label
         const syncEl = document.getElementById('syncTime');
@@ -242,27 +315,47 @@
 
         const cacheData = { data, loc, timestamp: Date.now() };
         localStorage.setItem(`weather_${city.toLowerCase()}`, JSON.stringify(cacheData));
+        localStorage.setItem('lastCity', city);
 
       } catch (err) {
         document.getElementById('loading').classList.remove('show');
-        console.warn('Network or API error, checking cache.', err);
+        console.warn('Primary API failed, attempting failover.', err);
         
         try {
           const cached = localStorage.getItem(`weather_${city.toLowerCase()}`);
           if (cached) {
             const { data, loc, timestamp } = JSON.parse(cached);
             const age = (Date.now() - timestamp) / 1000 / 60; 
-            console.log(`Loading cached data for ${city}, age: ${Math.round(age)} mins`);
             renderWeather(data, loc);
-            if (window.ErrorHandler) window.ErrorHandler.showToast('Offline: Showing cached data', 'info');
+            updateStatus('offline', `Showing Cached Data (${Math.round(age)} min old)`);
+            if (window.ErrorHandler) window.ErrorHandler.showToast('Reconnecting... Showing cached data', 'info');
             return;
           }
         } catch (e) {
           console.error('LocalStorage access failed', e);
         }
         
-        if (window.ErrorHandler) window.ErrorHandler.showToast('API unreachable. Showing demo data.', 'info');
-        showMockData(city);
+        updateStatus('error', 'Service Interrupted — Reconnecting');
+        if (window.ErrorHandler) window.ErrorHandler.showToast('API unreachable. Reverting to safe state.', 'error');
+        showSafeState(city);
+      }
+    }
+
+    function updateStatus(state, text) {
+      const dot = document.getElementById('statusDot');
+      const txt = document.getElementById('statusText');
+      if (!dot || !txt) return;
+
+      txt.textContent = text;
+      if (state === 'online') {
+        dot.style.background = '#10b981';
+        dot.style.boxShadow = '0 0 8px #10b981';
+      } else if (state === 'offline') {
+        dot.style.background = '#f59e0b';
+        dot.style.boxShadow = '0 0 8px #f59e0b';
+      } else {
+        dot.style.background = '#ef4444';
+        dot.style.boxShadow = '0 0 8px #ef4444';
       }
     }
 
@@ -280,9 +373,8 @@
       document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain';
       document.getElementById('feelsLike').textContent = `${Math.round(data.current.apparent_temperature)}°C`;
       document.getElementById('pressure').textContent = `${data.current.surface_pressure} hPa`;
-      document.getElementById('clouds').textContent = `${data.current.cloud_cover}%`;
-      
       document.getElementById('mainCard').classList.add('show');
+      if(document.getElementById('liveBadge')) document.getElementById('liveBadge').classList.add('show');
 
       const grid = document.getElementById('forecastGrid');
       grid.innerHTML = '';
@@ -312,47 +404,22 @@
       }
     }
 
-    function showMockData(city) {
+    function showSafeState(city) {
       document.getElementById('error').classList.remove('show');
       
-      // Mock Current Weather
-      document.getElementById('cityName').textContent = `${city} (MOCK)`;
-      document.getElementById('cityDate').textContent = new Date().toUTCString().replace(' GMT','');
+      // Load from global defaults if no specific city cache exists
+      document.getElementById('cityName').textContent = city || 'Location Pending';
+      document.getElementById('cityDate').textContent = 'Last Known Stable View';
       const info = window.getWeatherInfo(1); // Partly cloudy
-      document.getElementById('weatherDesc').textContent = info.d;
-      document.getElementById('weatherIcon').textContent = info.i;
+      document.getElementById('weatherDesc').textContent = 'No data available';
+      document.getElementById('weatherIcon').textContent = '📡';
       
-      document.getElementById('temperature').textContent = `28°C`;
-      document.getElementById('humidity').textContent = `65%`;
-      document.getElementById('wind').textContent = `12 km/h`;
-      document.getElementById('visibility').textContent = `0 mm`;
-      document.getElementById('visibility').previousElementSibling.textContent = 'Visibility / Rain';
-      document.getElementById('feelsLike').textContent = `30°C`;
-      document.getElementById('pressure').textContent = `1012 hPa`;
-      document.getElementById('clouds').textContent = `40%`;
-      
+      document.getElementById('temperature').textContent = `--°C`;
       document.getElementById('mainCard').classList.add('show');
+      if(document.getElementById('liveBadge')) document.getElementById('liveBadge').classList.remove('show');
 
-      // Mock Forecast
       const grid = document.getElementById('forecastGrid');
-      grid.innerHTML = '';
-      let dt = new Date();
-      for (let j=0; j<5; j++) {
-        dt.setHours(dt.getHours() + 3);
-        const code = j % 2 === 0 ? 0 : 3;
-        const temp = 25 + j;
-        const inf = window.getWeatherInfo(code);
-        
-        const card = document.createElement('div');
-        card.className = 'forecast-card show';
-        card.innerHTML = `
-          <div class="forecast-day">${days[dt.getDay()]} ${dt.getHours()}:00</div>
-          <div class="forecast-icon">${inf.i}</div>
-          <div class="forecast-temp">${temp}°C</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">${inf.d}</div>
-        `;
-        grid.appendChild(card);
-      }
+      grid.innerHTML = '<div style="color:var(--muted); padding:20px; text-align:center; width:100%;">Reconnecting to live data sources...</div>';
     }
 
     function showError(msg) {
@@ -361,8 +428,15 @@
       el.classList.add('show');
     }
 
-    // Load default city
-    quickCity('Mumbai');
+    // Load last city or default
+    const lastCity = localStorage.getItem('lastCity') || 'Mumbai';
+    quickCity(lastCity);
+
+    // Auto-refresh every 10 minutes
+    setInterval(() => {
+      const city = document.getElementById('cityInput').value.trim();
+      if (city) getWeather();
+    }, 600000);
   </script>
 </body>
 </html>
